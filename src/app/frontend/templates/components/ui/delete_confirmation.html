@@ -1,0 +1,32 @@
+{% from "components/ui/button.html" import button %}
+{% from "components/ui/icons.html" import icon %}
+
+{% macro form_template(x_if, entity_name="item") %}
+  <template x-if="{{ x_if }}">
+    <div>
+      <p>
+        Are you sure you want to delete
+        <span
+          x-text="$truncate({{ entity_name }}, 8)"
+          class="font-semibold text-gray-900"
+        ></span
+        >?
+      </p>
+      <p class="text-sm text-red-500 mt-2">This action cannot be undone.</p>
+    </div>
+  </template>
+{% endmacro %}
+
+{% macro button_template(x_if, x_text, callback) %}
+  <template x-if="{{ x_if }}">
+    {{
+      button(
+        x_text=x_text,
+        icon=icon(name="trash", size="sm", color="white"),
+        callback=callback,
+        type="button",
+        variant="red"
+      )
+    }}
+  </template>
+{% endmacro %}

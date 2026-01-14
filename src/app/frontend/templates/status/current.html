@@ -1,0 +1,21 @@
+{% from "status/icon.html" import status_icon %}
+
+<div
+  x-show="currentIncident"
+  x-cloak
+  :class="currentIncident?.borderColor"
+  class="mb-8 md:mb-12 border"
+>
+  <div :class="currentIncident?.bgColor" class="gap-3 p-4 sm:p-6">
+    <h2
+      x-text="currentIncident?.title"
+      :class="currentIncident?.borderColor"
+      class="text-base mx-auto text-center sm:text-lg md:text-xl font-medium text-stone-900 border-b pb-4"
+    ></h2>
+
+    <p
+      x-text="currentIncident?.message"
+      class="text-sm sm:text-base text-stone-700 pt-4 text-center"
+    ></p>
+  </div>
+</div>

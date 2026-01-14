@@ -1,0 +1,13 @@
+<header class="container mx-auto px-6 pt-12 max-w-4xl">
+  <nav class="flex items-center justify-between">
+    <div {% if logo_class %}class="{{ logo_class }}"{% endif %}>
+      <a
+        class="cursor-pointer flex transition-all duration-300 transform hover:-translate-y-0.5"
+        href="/"
+      >
+        <h1 class="text-3xl font-bold">{{ organization_name }}</h1>
+      </a>
+    </div>
+    {% block nav %}{% endblock %}
+  </nav>
+</header>

@@ -1,0 +1,45 @@
+{% from "components/ui/button.html" import button %}
+{% from "components/ui/icons.html" import icon %}
+{% extends "header.html" %}
+{% set logo_class="hidden sm:block" %}
+
+{% block nav %}
+  <ul class="flex space-x-4 flex-wrap items-center">
+    {%
+      set nav = {
+        "groups": {"text": "Groups", "icon": "group"},
+        "monitors": {"text": "Monitors", "icon": "monitor"},
+      }
+    %}
+
+    {% for key, value in nav.items() %}
+      <li class="transition-all duration-300 transform hover:-translate-y-0.5">
+        <a
+          {% if current_page == key %}
+            class="font-bold flex items-center gap-2"
+          {% else %}
+            class="opacity-65 hover:opacity-100 transition-all duration-300 flex
+            items-center gap-2"
+          {% endif %}
+          href="/{{ admin_path }}/{{ key }}"
+        >
+          {{ icon(name=value.icon, size="sm", color="black") }}
+          {{ value.text }}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+  <div x-data="logout('{{ admin_path }}')">
+    {{
+      button(
+       text="Logout",
+       icon=icon(name="logout", size="sm", color="white"),
+       callback="logout()",
+       type="button",
+       variant="red",
+       w_full=true,
+       span_class="hidden sm:inline",
+      )
+    }}
+  </div>
+{% endblock %}

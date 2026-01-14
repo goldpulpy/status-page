@@ -1,0 +1,46 @@
+{%
+  macro button(
+    text=null,
+    icon=null,
+    rounded=null,
+    callback=null,
+    x_text=null,
+    type="button",
+    w_full=false,
+    variant="blue",
+    span_class="",
+    class="",
+    x_bind_disabled=false
+  )
+%}
+  {%
+    set variants = {
+      'blue': 'bg-blue-500 text-white hover:bg-blue-600',
+      'yellow': 'bg-yellow-500 text-white hover:bg-yellow-600',
+      'red': 'bg-red-500 text-white hover:bg-red-600',
+      'ghost': 'text-black hover:bg-blue-50',
+    }
+  %}
+
+  <button
+    type="{{ type }}"
+    {% if callback %}@click="{{ callback }}"{% endif %}
+    {% if x_bind_disabled %}:disabled="{{ x_bind_disabled }}"{% endif %}
+    class="cursor-pointer {% if w_full %}w-full{% endif %}
+          py-2.5 px-4 text-sm font-medium
+          {{ variants[variant] }} transition
+          flex items-center justify-center gap-2
+          disabled:opacity-50 disabled:cursor-not-allowed
+          duration-200 transform hover:-translate-y-0.5
+          {{ class }}"
+  >
+    {% if icon %}{{ icon }}{% endif %}
+    {% if text or x_text %}
+      <span
+        {% if x_text %}x-text="{{ x_text }}"{% endif %}
+        {% if span_class %}class="{{ span_class }}"{% endif %}
+        >{{ text }}</span
+      >
+    {% endif %}
+  </button>
+{% endmacro %}

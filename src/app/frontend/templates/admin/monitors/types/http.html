@@ -1,0 +1,82 @@
+{# Template for HTTP monitor #}
+
+<template x-if="state.form.type === 'HTTP'">
+  <div class="space-y-4">
+    {{
+      select(
+        label="Method",
+        name="monitor-method",
+        x_model="state.form.method",
+        x_model_default_value="GET",
+        x_options_from="['GET', 'POST', 'PUT', 'DELETE']",
+        x_option_label="option",
+        x_option_value="option",
+        required=true,
+        empty_option=false
+      )
+    }}
+    {{
+      input(
+        label="Endpoint",
+        x_model="state.form.endpoint",
+        type="text",
+        id="monitor-endpoint",
+        placeholder="https://example.com/...",
+        required=true
+      )
+    }}
+    {{
+      textarea(
+        label="Headers",
+        x_model="state.form.headers",
+        name="monitor-headers",
+        placeholder='{"Authorization": "Bearer token", ...}'
+      )
+    }}
+
+    {{
+      textarea(
+        label="Request body",
+        x_model="state.form.request_body",
+        name="monitor-request-body",
+        placeholder='{"key": "value"}'
+      )
+    }}
+    {{
+      input(
+        label="Expected response code",
+        x_model="state.form.expected_response_code",
+        type="number",
+        name="monitor-expected-response-code",
+        placeholder="200",
+      )
+    }}
+    {{
+      input(
+        label="Latency Threshold (ms)",
+        x_model="state.form.latency_threshold_ms",
+        type="number",
+        name="monitor-latency-threshold",
+        placeholder="1000",
+      )
+    }}
+    {{
+      input(
+        label="Expected content pattern",
+        x_model="state.form.expected_content_pattern",
+        type="text",
+        name="monitor-expected-content-pattern",
+        placeholder="Hello World",
+      )
+    }}
+
+    {{
+      textarea(
+        label="Error mapping",
+        x_model="state.form.error_mapping",
+        name="monitor-error-mapping",
+        placeholder='{"404": "Not Found", "500": "Server Error"}'
+      )
+    }}
+  </div>
+</template>

@@ -1,0 +1,88 @@
+{%
+  from "components/ui/delete_confirmation.html"
+  import form_template as delete_confirmation,
+  button_template as delete_button
+%}
+{% from "components/ui/input.html" import input, textarea, select %}
+{% from "components/ui/button.html" import button %}
+{% from "components/ui/icons.html" import icon %}
+{% extends "components/ui/modal.html" %}
+
+{% set show = "state.modal.isOpen" %}
+{% set title = "state.modal.title" %}
+{% set cancel = "cancel()" %}
+
+{% block content %}
+  <template x-if="state.action === 'create' || state.action === 'update'">
+    <div class="space-y-4">
+      <div class="space-y-4">
+        {{
+          input(
+            label="Name",
+            x_model="state.form.name",
+            type="text",
+            id="monitor-name",
+            name="monitorName",
+            placeholder="Enter monitor name",
+            required=true
+          )
+        }}
+
+        {{
+          select(
+            label="Group",
+            x_model="state.form.group_id",
+            name="monitor-group",
+            x_options_from="groups",
+            x_option_label="option.name",
+            x_option_value="option.id",
+            placeholder="No group",
+          )
+        }}
+
+        {{
+          select(
+            label="Type",
+            x_model="state.form.type",
+            x_model_default_value="HTTP",
+            name="monitor-type",
+            x_options_from="types",
+            x_option_label="option",
+            x_option_value="option",
+            required=true,
+          )
+        }}
+      </div>
+      {% include "admin/monitors/types/http.html" %}
+    </div>
+  </template>
+
+  {{
+    delete_confirmation(
+      x_if="state.action === 'delete'",
+      entity_name="state.form.name"
+    )
+  }}
+{% endblock %}
+
+{% block buttons %}
+  <template x-if="state.action !== 'delete'">
+    {{
+      button(
+        x_text="state.modal.buttonText",
+        icon=icon(name="check", size="sm", color="white"),
+        callback="submit()",
+        type="button",
+        variant="blue",
+        x_bind_disabled="!state.form.name?.trim() || !state.form.endpoint?.trim() || !state.form.type?.trim()"
+      )
+    }}
+  </template>
+  {{
+    delete_button(
+      x_if="state.action === 'delete'",
+      x_text="state.modal.buttonText",
+      callback="submit()"
+    )
+  }}
+{% endblock %}

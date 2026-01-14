@@ -1,0 +1,53 @@
+version: "3.8"
+
+services:
+  status-page:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: goldpulpy/status-page:latest
+    container_name: status-page-app
+    ports:
+      - ${CONTAINER_PORT:-5000}:${PORT:-5000}
+    env_file:
+      - .env
+    restart: unless-stopped
+    mem_limit: 512m
+    networks:
+      - status-page
+    cpus: 0.5
+    stop_grace_period: 30s
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:17-alpine
+    container_name: status-page-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      TZ: ${TZ:-UTC}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - status-page
+    mem_limit: 512m
+    cpus: 0.5
+    stop_grace_period: 30s
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+    name: status-page-postgres
+
+networks:
+  status-page:
+    name: status-page
+    driver: bridge

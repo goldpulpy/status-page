@@ -1,0 +1,65 @@
+{% from "components/ui/icons.html" import icon %}
+{% from "components/ui/input.html" import input %}
+{% from "components/ui/button.html" import button %}
+{% extends "base.html" %}
+
+{% block content %}
+  <main
+    x-data="login('{{ admin_path }}')"
+    @submit.prevent="submitForm()"
+    class="flex flex-col items-center justify-start sm:justify-center px-4 py-10 sm:py-30"
+  >
+    <a class="cursor-pointer mx-auto mb-6 sm:mb-8" href="/">
+      <h1 class="text-2xl sm:text-3xl font-bold">{{ organization_name }}</h1>
+    </a>
+
+    <div
+      class="w-full max-w-sm sm:max-w-md border bg-white border-stone-300 p-4 p-6 sm:p-10"
+    >
+      <h2 class="text-xl sm:text-2xl text-center font-semibold">Admin Login</h2>
+
+      <p class="mt-2 text-center text-gray-500 text-sm">
+        Enter admin credentials to continue
+      </p>
+
+      <form class="mt-6 sm:mt-8 space-y-5 sm:space-y-6">
+        {{
+          input(
+            label="Login",
+            label_icon=icon(name="user", size="sm"),
+            icon=icon(name="email", size="sm"),
+            id="username",
+            x_model="username", name="username",
+            placeholder="Enter username",
+            x_bind_disabled="isLoading",
+          )
+        }}
+
+        {{
+          input(
+            label="Password",
+            label_icon=icon(name="lock", size="sm"),
+            icon=icon(name="lock", size="sm"),
+            x_model="password",
+            id="password",
+            type="password",
+            name="password",
+            placeholder="Enter password",
+            x_bind_disabled="isLoading",
+          )
+        }}
+
+        {{
+          button(
+            text="Login",
+            icon=icon(name="login", color="white"),
+            type="submit",
+            w_full=true,
+            variant="blue",
+            x_bind_disabled="isLoading || !username || !password"
+          )
+        }}
+      </form>
+    </div>
+  </main>
+{% endblock %}

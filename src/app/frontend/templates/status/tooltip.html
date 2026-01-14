@@ -1,0 +1,61 @@
+{% from "components/ui/icons.html" import icon %}
+{% from "status/icon.html" import status_icon %}
+
+<div
+  x-show="tooltip.isActive"
+  x-cloak
+  @mouseleave="setTooltip(null)"
+  :style="tooltip.style"
+  class="hidden md:block fixed max-h-96 overflow-y-auto bg-white border border-stone-300 p-2 z-50 max-w-xs"
+>
+  <div>
+    {%
+      set variants = [
+        {
+          "x_if": "!tooltip.incidents",
+          "icon": "search",
+          "color": "gray",
+          "text": "Not Found",
+          "icon_variant": "outline",
+          "fill_rule" : null
+        },
+        {
+          "x_if": "tooltip.incidents?.length === 0",
+          "icon": "check-circle",
+          "color": "text-operational",
+          "text": "No incidents",
+          "icon_variant": "solid",
+          "fill_rule": "evenodd"
+
+
+        },
+      ]
+    %}
+
+    {% for variant in variants %}
+      <template x-if="{{ variant.x_if }}">
+        <div class="flex items-center gap-2">
+          {{
+            icon(
+            name=variant.icon,
+            size="sm",
+            color=variant.color,
+            variant=variant.icon_variant,
+            fill_rule=variant.fill_rule
+            )
+          }}
+          <p class="text-sm text-gray-600">{{ variant.text }}</p>
+        </div>
+      </template>
+    {% endfor %}
+
+    <template x-if="tooltip.incidents?.length > 0">
+      <template x-for="incident in tooltip.incidents" :key="incident.id">
+        <div class="flex items-center gap-2">
+          {{ status_icon(x_trigger="incident.type", size="sm") }}
+          <p class="text-sm text-gray-600" x-text="incident.tooltip"></p>
+        </div>
+      </template>
+    </template>
+  </div>
+</div>

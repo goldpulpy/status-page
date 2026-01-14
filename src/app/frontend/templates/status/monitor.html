@@ -1,0 +1,46 @@
+{% from "status/icon.html" import status_icon %}
+
+{% macro render(x_items="items") %}
+  <template x-for="item in {{ x_items }}" :key="item.id">
+    <div class="bg-white border border-stone-300 p-4 sm:p-6 md:p-8 mb-6">
+      <template x-if="item.type === 'group'">
+        <div>
+          <h3 class="text-lg sm:text-xl font-bold" x-text="item.name"></h3>
+          <div class="space-y-4">
+            <template x-for="item in item.monitors" :key="item.id">
+              {{ monitor(x_item="item") }}
+            </template>
+          </div>
+        </div>
+      </template>
+      <template x-if="item.type !== 'group'">
+        {{ monitor(x_item="item") }}
+      </template>
+    </div>
+  </template>
+{% endmacro %}
+
+{% macro monitor(x_item="item") %}
+  <div>
+    <div class="my-1 flex items-center gap-2">
+      {{ status_icon(x_trigger=x_item + "?.currentIncident?.type", size="sm") }}
+      <span
+        class="font-medium text-sm sm:text-base text-gray-700"
+        x-text="{{ x_item }}.name"
+      ></span>
+    </div>
+
+    <div
+      class="hidden sm:flex h-4 sm:h-6 flex gap-0.5 w-full"
+      @mouseover="handleHistoryHover($event, {{ x_item }}.history)"
+    >
+      <template x-for="bar in {{ x_item }}.history" :key="bar.index">
+        <span
+          class="relative flex-1 h-full hover:opacity-80 transition-opacity cursor-pointer"
+          :class="bar.color"
+          :data-index="bar.index"
+        ></span>
+      </template>
+    </div>
+  </div>
+{% endmacro %}

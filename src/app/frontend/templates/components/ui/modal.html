@@ -1,0 +1,38 @@
+<div
+  x-show="{{ show }}"
+  x-cloak
+  class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+>
+  <div class="bg-white w-full max-w-md mx-4">
+    <div
+      class="flex justify-between items-center p-6 border-b border-stone-300"
+    >
+      <h2 x-text="{{ title }}" class="text-xl font-semibold text-gray-800"></h2>
+      <button
+        @click=" {{ cancel }}"
+        class="cursor-pointer text-gray-400 hover:text-gray-600"
+      >
+        ✕
+      </button>
+    </div>
+    <div class="overflow-y-auto max-h-96 p-6">
+      {% block content %}{% endblock %}
+    </div>
+    <div
+      class="flex justify-end gap-3 p-6 border-t border-stone-300 bg-gray-50 rounded-b-lg"
+    >
+      {{
+        button(
+          text="Cancel",
+          callback=cancel,
+          type="button",
+          variant="ghost",
+          class="border border-stone-300"
+        )
+      }}
+
+      {% block buttons %}
+      {% endblock %}
+    </div>
+  </div>
+</div>

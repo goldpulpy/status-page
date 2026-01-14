@@ -1,0 +1,178 @@
+{%
+  macro
+  input(
+    label=null,
+    label_icon=null,
+    icon=null,
+    type="text",
+    id=null,
+    name=null,
+    placeholder=null,
+    class="",
+    x_model=null,
+    x_bind_disabled=false,
+    required=false
+  )
+%}
+  <div>
+    {% if label %}
+      <label
+        {% if id %}for="{{ id }}"{% endif %}
+        class="block text-sm font-medium text-gray-700 mb-1 flex"
+      >
+        <div class="flex items-center gap-2">
+          {% if label_icon %}{{ label_icon }}{% endif %}
+          <span>{{ label }}</span>
+        </div>
+        {% if required %}<span class="text-red-500">*</span>{% endif %}
+      </label>
+    {% endif %}
+
+    <div class="relative">
+      {% if icon %}
+        <div
+          class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+        >
+          {{ icon }}
+        </div>
+      {% endif %}
+      <input
+        {% if x_model %}x-model="{{ x_model }}"{% endif %}
+        type="{{ type }}"
+        {% if name %}name="{{ name }}"{% endif %}
+        {% if id %}id="{{ id }}"{% endif %}
+        {% if required %}required{% endif %}
+        {% if placeholder %}placeholder="{{ placeholder }}"{% endif %}
+        {% if x_bind_disabled %}:disabled="{{ x_bind_disabled }}"{% endif %}
+        class="w-full border border-stone-300
+              {% if icon %}pl-10{% else %}pl-4{% endif %} pr-4 py-2.5 text-sm
+              focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none
+              transition {{ class }}"
+      />
+    </div>
+  </div>
+{% endmacro %}
+
+{%
+  macro
+  textarea(
+    label=null,
+    label_icon=null,
+    id=null,
+    name=null,
+    placeholder=null,
+    class="",
+    x_model=null,
+    x_bind_disabled=null,
+    rows="2",
+    required=false
+  )
+%}
+  <div>
+    {% if label %}
+      <label
+        {% if id %}for="{{ id }}"{% endif %}
+        class="block text-sm font-medium text-gray-700 mb-1 flex"
+      >
+        <div class="flex items-center gap-2">
+          {% if label_icon %}{{ label_icon }}{% endif %}
+          <span>{{ label }}</span>
+        </div>
+        {% if required %}<span class="text-red-500">*</span>{% endif %}
+      </label>
+    {% endif %}
+
+    <textarea
+      {% if x_model %}x-model="{{ x_model }}"{% endif %}
+      rows="{{ rows }}"
+      {% if name %}name="{{ name }}"{% endif %}
+      {% if id %}id="{{ id }}"{% endif %}
+      {% if required %}required aria-required="true"{% endif %}
+      {% if placeholder %}placeholder="{{ placeholder }}"{% endif %}
+      {% if x_bind_disabled %}:disabled="{{ x_bind_disabled }}"{% endif %}
+      class="w-full border border-stone-300 px-4 py-2.5 text-sm
+              focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none
+              transition {{ class }}"
+    ></textarea>
+  </div>
+{% endmacro %}
+
+{%
+  macro
+  select(
+    label=null,
+    label_icon=null,
+    icon=null,
+    id=null,
+    name=null,
+    placeholder=null,
+    class=null,
+    x_model=null,
+    x_model_default_value=null,
+    x_options_from=null,
+    x_option_value=null,
+    x_option_label=null,
+    x_bind_disabled=null,
+    required=null,
+    empty_option=true
+  )
+%}
+  <div>
+    {% if label %}
+      <label
+        {% if id %}for="{{ id }}"{% endif %}
+        class="block text-sm font-medium text-gray-700 mb-1 flex"
+      >
+        <div class="flex items-center gap-2">
+          {% if label_icon %}{{ label_icon }}{% endif %}
+          <span>{{ label }}</span>
+        </div>
+        {% if required %}<span class="text-red-500">*</span>{% endif %}
+      </label>
+    {% endif %}
+
+    <div class="relative">
+      {% if icon %}
+        <div
+          class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+        >
+          {{ icon }}
+        </div>
+      {% endif %}
+
+      <select
+        {% if x_model %}x-model="{{ x_model }}"{% endif %}
+        {% if x_model_default_value %}
+          x-effect="if (!{{ x_model }}) {{ x_model }} =
+          '{{ x_model_default_value }}'"
+        {% endif %}
+        {% if name %}name="{{ name }}"{% endif %}
+        {% if id %}id="{{ id }}"{% endif %}
+        {% if required %}required aria-required="true"{% endif %}
+        {% if x_bind_disabled %}
+          :disabled="{{ x_bind_disabled }}"
+          :aria-disabled="{{ x_bind_disabled }}"
+        {% endif %}
+        class="w-full border border-stone-300 px-4 py-2.5 text-sm
+              focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none
+              transition {{ class }}"
+      >
+        {% if empty_option %}
+          <option value="" selected>
+            {% if placeholder %}{{ placeholder }}{% else %}Select{% endif %}
+          </option>
+        {% endif %}
+
+        {% if x_options_from %}
+          <template x-for="option in {{ x_options_from }}">
+            <option
+              x-bind:selected="{{ x_option_value }} === {{ x_model }}"
+              x-text="{{ x_option_label }}"
+              :value="{{ x_option_value }}"
+            ></option>
+          </template>
+        {% endif %}
+      </select>
+    </div>
+  </div>
+{% endmacro %}

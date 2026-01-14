@@ -1,0 +1,19 @@
+{% from "components/ui/icons.html" import icon %}
+{% extends "base.html" %}
+{% block content %}
+  <div>
+    {% include "header.html" %}
+
+    <main class="mx-auto py-24 max-w-4xl">
+      <div class="border border-stone-300 p-12 text-center bg-white">
+        <div class="mx-auto flex items-center justify-center h-16 w-16">
+          {{ icon(name="search", size="xl") }}
+        </div>
+        <p class="mt-2 font-semibold text-md">Page not found</p>
+        <p class="mt-2 text-gray-400">
+          The page you are looking for could not be found.
+        </p>
+      </div>
+    </main>
+  </div>
+{% endblock %}

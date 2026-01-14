@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <link
+      rel="icon"
+      type="image/png"
+      href="{{ url_for('static', path='favicon.png') }}"
+      sizes="96x96"
+    />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="{{ url_for('static', path='favicon.svg') }}"
+    />
+    <link
+      rel="shortcut icon"
+      href="{{ url_for('static', path='favicon.ico') }}"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="{{ url_for('static', path='apple-touch-icon.png') }}"
+    />
+    <link
+      rel="manifest"
+      href="{{ url_for('static', path='site.webmanifest') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', path='styles.min.css') }}"
+    />
+
+    <meta
+      name="apple-mobile-web-app-title"
+      content="{{ organization_name }} Status"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="theme-color" content="#0d1117" />
+
+    <script defer src="{{ url_for('static', path='main.min.js') }}"></script>
+
+    <title>{{ organization_name }} Status</title>
+  </head>
+
+  <body class="bg-stone-50 h-full">
+    {% block content %}{% endblock %}
+  </body>
+</html>

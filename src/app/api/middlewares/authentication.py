@@ -1,0 +1,51 @@
+"""Authentication middleware."""
+
+from __future__ import annotations
+
+import logging
+from typing import TYPE_CHECKING, ClassVar
+
+from fastapi.responses import JSONResponse
+
+from app.shared import config
+from app.shared.middlewares import BaseAuthMiddleware
+
+if TYPE_CHECKING:
+    from collections.abc import Awaitable, Callable
+
+    from fastapi import Request, Response
+
+logger = logging.getLogger(__name__)
+
+
+class APIAuthMiddleware(BaseAuthMiddleware):
+    """API authentication with JSON response."""
+
+    AUTH_INCLUDE_PATHS: ClassVar[set[str]] = {
+        f"/api/v1/{config.admin.safe_path}/logout",
+        f"/api/v1/{config.admin.safe_path}/groups",
+        f"/api/v1/{config.admin.safe_path}/monitors",
+    }
+
+    def _should_authenticate(self, path: str) -> bool:
+        return any(path.startswith(p) for p in self.AUTH_INCLUDE_PATHS)
+
+    async def dispatch(
+        self,
+        request: Request,
+        call_next: Callable[[Request], Awaitable[Response]],
+    ) -> Response:
+        """Dispatch middleware."""
+        if request.method == "OPTIONS":
+            return await call_next(request)
+
+        if not self._should_authenticate(request.url.path):
+            return await call_next(request)
+
+        if not self._verify_token(request):
+            return JSONResponse(
+                content={"detail": "Unauthorized"},
+                status_code=401,
+            )
+
+        return await call_next(request)

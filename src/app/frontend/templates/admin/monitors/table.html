@@ -1,0 +1,60 @@
+{% from "components/ui/button.html" import button %}
+{% from "components/ui/icons.html" import icon %}
+
+<div class="overflow-x-auto">
+  <table class="min-w-full">
+    <thead>
+      <tr class="bg-gray-50 border-b border-stone-300">
+        {% set ths = ["Name", "Type", "Group", "Actions"] %}
+
+        {% for th in ths %}
+          <th
+            class="px-4 md:px-6 py-3
+                  {% if not loop.last %}text-left{% endif %}
+                  {% if loop.last %}text-right{% endif %}
+                  text-xs font-semibold text-gray-600 uppercase"
+          >
+            {{ th }}
+          </th>
+        {% endfor %}
+      </tr>
+    </thead>
+
+    <tbody class="bg-white">
+      <template x-for="item in state.items" :key="item.id">
+        <tr class="hover:bg-gray-50 transition">
+          {% set tds = ["name", "type", "group_name"] %}
+
+          {% for td in tds %}
+            <td
+              class="px-4 md:px-6 py-3 text-left text-sm font-medium"
+              x-text="$truncate(item.{{ td }}, 16)"
+            ></td>
+          {% endfor %}
+
+          <td class="px-4 md:px-6 py-3">
+            <div class="flex justify-end items-center gap-2">
+              {{
+                button(
+                icon=icon(name="edit", size="sm", color="white"),
+                callback="openModal('update', item)",
+                type="button",
+                variant="yellow",
+                )
+              }}
+
+              {{
+                button(
+                icon=icon(name="trash", size="sm", color="white"),
+                callback="openModal('delete', item)",
+                type="button",
+                variant="red",
+                )
+              }}
+            </div>
+          </td>
+        </tr>
+      </template>
+    </tbody>
+  </table>
+</div>

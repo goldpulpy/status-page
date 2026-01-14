@@ -1,0 +1,40 @@
+{% from "components/ui/icons.html" import icon %}
+
+{% macro status_icon(x_trigger, size="md") %}
+  {%
+    set status_icons = {
+      "operational": {
+        "icon": "check-circle",
+        "color": "text-operational"
+      },
+      "degraded": {
+        "icon": "warning",
+        "color": "text-degraded"
+      },
+      "partial_outage": {
+        "icon": "warning",
+        "color": "text-partialoutage"
+      },
+      "major_outage": {
+        "icon": "warning",
+        "color": "text-majoroutage"
+      }
+    }
+  %}
+
+  {% for key, value in status_icons.items() %}
+    <template x-if="{{ x_trigger }} === '{{ key }}'">
+      <div>
+        {{
+          icon(
+            name=value.icon,
+            size=size,
+            color=value.color,
+            variant="solid",
+            fill_rule="evenodd"
+          )
+        }}
+      </div>
+    </template>
+  {% endfor %}
+{% endmacro %}
