@@ -1,0 +1,182 @@
+nodeSelector: {}
+
+# ============================================
+#           Image Configuration
+# ============================================
+image:
+  registry: docker.io
+  repository: goldpulpy/status-page
+  tag: latest
+  pullPolicy: IfNotPresent
+
+# ============================================
+#           Application Settings
+# ============================================
+config:
+  logLevel: INFO # DEBUG | INFO | WARNING | ERROR | CRITICAL
+  environment: production # development | staging | production
+  organizationName: "OrgName"
+  host: "0.0.0.0"
+  port: 5000
+  adminPath: "/admin"
+  jwt:
+    issuer: "StatusPage"
+    expiresIn: 3600 # 1 hour
+    algorithm: "HS256"
+
+# ============================================
+#           Secrets Configuration
+# ============================================
+secrets:
+  # Use existing secret (recommended for production)
+  existingSecret: ""
+
+  # Or provide secrets directly (NOT for production!)
+  # These should be overridden via --set or values-{env}.yaml
+  adminUsername: ""
+  adminPassword: ""
+  jwtSecret: "" # Min 32 chars, use: openssl rand -base64 32
+
+  # Annotations for secret
+  annotations: {}
+
+# ============================================
+#           PostgreSQL Configuration
+# ============================================
+postgresql:
+  enabled: true
+  auth:
+    username: statuspage
+    database: statuspage
+    # Generate password automatically or use existing secret
+    existingSecret: ""
+    secretKeys:
+      secretPasswordKey: password
+
+  primary:
+    persistence:
+      enabled: true
+      size: 2Gi
+      storageClass: ""
+
+    resources:
+      limits:
+        cpu: 500m
+        memory: 512Mi
+      requests:
+        cpu: 250m
+        memory: 256Mi
+
+  # External PostgreSQL configuration (if enabled: false)
+  external:
+    host: ""
+    port: 5432
+    database: "statuspage"
+    username: "statuspage"
+    # Password should be in existing secret
+    existingSecret: ""
+    existingSecretPasswordKey: "postgres-password"
+
+# ============================================
+#           Service Account
+# ============================================
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+  automountServiceAccountToken: false
+
+# ============================================
+#           Pod Configuration
+# ============================================
+
+podLabels: {}
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  fsGroup: 1000
+  seccompProfile:
+    type: RuntimeDefault
+
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 1000
+
+# ============================================
+#           Service Configuration
+# ============================================
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 5000
+  nodePort: ""
+  clusterIP: ""
+  loadBalancerIP: ""
+  loadBalancerSourceRanges: []
+  externalTrafficPolicy: Cluster
+  annotations: {}
+  sessionAffinity: None
+  sessionAffinityConfig: {}
+
+# ============================================
+#           Ingress Configuration
+# ============================================
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+
+  hosts:
+    - host: status.local
+      paths:
+        - path: /
+          pathType: Prefix
+
+  tls:
+    - secretName: status-page-tls
+      hosts:
+        - status.local
+
+# ============================================
+#           Resource Management
+# ============================================
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 250m
+    memory: 256Mi
+
+# ============================================
+#           Health Checks
+# ============================================
+livenessProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+readinessProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 5
+  periodSeconds: 5
+  timeoutSeconds: 3
+  failureThreshold: 3

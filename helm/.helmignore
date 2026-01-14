@@ -1,0 +1,40 @@
+.DS_Store
+# Common VCS dirs
+.git/
+.gitignore
+.bzr/
+.bzrignore
+.hg/
+.hgignore
+.svn/
+# Common backup files
+*.swp
+*.bak
+*.tmp
+*.orig
+*~
+# Various IDEs
+.project
+.idea/
+*.tmproj
+.vscode/
+# CI/CD
+.github/
+.gitlab-ci.yml
+.travis.yml
+# Documentation
+README.md
+CHANGELOG.md
+LICENSE
+# Test files
+*_test.yaml
+test/
+tests/
+# Scripts
+scripts/
+*.sh
+# Environment files
+.env
+.env.*
+*.secret
+secrets/
