@@ -18,7 +18,7 @@
     {% if label %}
       <label
         {% if id %}for="{{ id }}"{% endif %}
-        class="block text-sm font-medium text-color mb-1 flex"
+        class="block text-sm font-medium text-text-primary mb-1 flex"
       >
         <div class="flex items-center gap-2">
           {% if label_icon %}{{ label_icon }}{% endif %}
@@ -44,9 +44,9 @@
         {% if required %}required{% endif %}
         {% if placeholder %}placeholder="{{ placeholder }}"{% endif %}
         {% if x_bind_disabled %}:disabled="{{ x_bind_disabled }}"{% endif %}
-        class="w-full border input-border-color
+        class="w-full border border-input-border
               {% if icon %}pl-10{% else %}pl-4{% endif %} pr-4 py-2.5 text-sm
-              focus:ring-2 input-ring-color focus:border-transparent outline-none
+              focus:ring-2 focus:ring-input-ring focus:border-transparent outline-none
               transition {{ class }}"
       />
     </div>
@@ -72,7 +72,7 @@
     {% if label %}
       <label
         {% if id %}for="{{ id }}"{% endif %}
-        class="block text-sm font-medium text-color mb-1 flex"
+        class="block text-sm font-medium text-text-primary mb-1 flex"
       >
         <div class="flex items-center gap-2">
           {% if label_icon %}{{ label_icon }}{% endif %}
@@ -90,8 +90,8 @@
       {% if required %}required aria-required="true"{% endif %}
       {% if placeholder %}placeholder="{{ placeholder }}"{% endif %}
       {% if x_bind_disabled %}:disabled="{{ x_bind_disabled }}"{% endif %}
-      class="w-full border input-border-color px-4 py-2.5 text-sm
-              focus:ring-2 input-ring-color focus:border-transparent outline-none
+      class="w-full border border-input-border px-4 py-2.5 text-sm
+              focus:ring-2 focus:ring-input-ring focus:border-transparent outline-none
               transition {{ class }}"
     ></textarea>
   </div>
@@ -121,7 +121,7 @@
     {% if label %}
       <label
         {% if id %}for="{{ id }}"{% endif %}
-        class="block text-sm font-medium text-color mb-1 flex"
+        class="block text-sm font-medium text-text-primary mb-1 flex"
       >
         <div class="flex items-center gap-2">
           {% if label_icon %}{{ label_icon }}{% endif %}
@@ -153,8 +153,8 @@
           :disabled="{{ x_bind_disabled }}"
           :aria-disabled="{{ x_bind_disabled }}"
         {% endif %}
-        class="w-full border input-border-color px-4 py-2.5 text-sm
-              focus:ring-2 input-ring-color focus:border-transparent outline-none
+        class="w-full border border-input-border px-4 py-2.5 text-sm
+              focus:ring-2 focus:ring-input-ring focus:border-transparent outline-none
               transition {{ class }}"
       >
         {% if empty_option %}

@@ -4,7 +4,7 @@
 {% macro form_template(x_if, entity_name="item") %}
   <template x-if="{{ x_if }}">
     <div>
-      <p class="text-color">
+      <p class="text-text-primary">
         Are you sure you want to delete
         <span
           x-text="$truncate({{ entity_name }}, 8)"

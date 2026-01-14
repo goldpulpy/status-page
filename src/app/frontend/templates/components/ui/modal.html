@@ -3,11 +3,14 @@
   x-cloak
   class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
 >
-  <div class="form-color w-full max-w-md mx-4">
+  <div class="bg-form w-full max-w-md mx-4">
     <div
-      class="flex justify-between items-center p-6 border-b form-sub-color form-border-color"
+      class="flex justify-between items-center p-6 border-b bg-form-sub border-form-border"
     >
-      <h2 x-text="{{ title }}" class="text-xl font-semibold title-color"></h2>
+      <h2
+        x-text="{{ title }}"
+        class="text-xl font-semibold text-text-title"
+      ></h2>
       <button
         @click=" {{ cancel }}"
         class="cursor-pointer text-gray-500 hover:text-gray-600"
@@ -19,7 +22,7 @@
       {% block content %}{% endblock %}
     </div>
     <div
-      class="flex justify-end gap-3 p-6 border-t form-border-color form-sub-color "
+      class="flex justify-end gap-3 p-6 border-t border-form-border bg-form-sub "
     >
       {{
         button(
@@ -27,7 +30,7 @@
           callback=cancel,
           type="button",
           variant="primary",
-          class="border button-border-color"
+          class="border border-button-border"
         )
       }}
 

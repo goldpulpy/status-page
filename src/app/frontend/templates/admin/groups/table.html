@@ -4,7 +4,7 @@
 <div class="overflow-x-auto">
   <table class="min-w-full">
     <thead>
-      <tr class="table-thead-bg-color border-b form-border-color">
+      <tr class="bg-background border-b border-form-border">
         {% set ths = ["Name", "Actions"] %}
 
         {% for th in ths %}
@@ -12,7 +12,7 @@
             class="px-4 md:px-6 py-3
         {% if not loop.last %}text-left{% endif %}
         {% if loop.last %}text-right{% endif %}
-        text-xs font-semibold subtitle-color uppercase"
+        text-xs font-semibold text-text-subtitle uppercase"
           >
             {{ th }}
           </th>
@@ -20,11 +20,11 @@
       </tr>
     </thead>
 
-    <tbody class="form-color">
+    <tbody class="bg-form">
       <template x-for="item in state.items" :key="item.id">
-        <tr class="table-body-hover transition">
+        <tr class="hover:bg-background transition">
           <td
-            class="px-4 md:px-6 py-3 text-left text-sm font-medium text-color"
+            class="px-4 md:px-6 py-3 text-left text-sm font-medium text-text-primary"
             x-text="$truncate(item.name, 64)"
           ></td>
 

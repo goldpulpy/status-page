@@ -20,15 +20,15 @@ export const NO_GROUP = "No group";
 
 export const INCIDENT_CONFIG: Record<IncidentType, IncidentConfig> = {
   [IncidentType.MAJOR_OUTAGE]: {
-    color: "bg-majoroutage",
-    bgColor: "bg-majoroutage/20",
-    borderColor: "border-majoroutage",
+    color: "bg-major-outage",
+    bgColor: "bg-major-outage/20",
+    borderColor: "border-major-outage",
     title: "Major service outage",
   },
   [IncidentType.PARTIAL_OUTAGE]: {
-    color: "bg-partialoutage",
-    bgColor: "bg-partialoutage/20",
-    borderColor: "border-partialoutage",
+    color: "bg-partial-outage",
+    bgColor: "bg-partial-outage/20",
+    borderColor: "border-partial-outage",
     title: "Partial service disruption",
   },
   [IncidentType.DEGRADED]: {
