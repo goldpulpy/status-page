@@ -73,6 +73,22 @@
   .icon-primary-color {
     @apply text-stone-900;
   }
+
+  .table-color {
+    @apply bg-stone-50;
+  }
+
+  .table-thead-bg-color {
+    @apply bg-stone-50;
+  }
+
+  .table-body-hover {
+    @apply hover:bg-stone-50;
+  }
+
+  .tooltip-text-color {
+    @apply text-stone-600;
+  }
 }
 
 [x-cloak] {

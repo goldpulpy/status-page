@@ -1,6 +1,6 @@
 {% from "components/ui/icons.html" import icon %}
 
-{% macro status_icon(x_trigger, size="md") %}
+{% macro status_icon(x_trigger=null, size="md") %}
   {%
     set status_icons = {
       "operational": {

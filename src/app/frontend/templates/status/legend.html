@@ -1,5 +1,5 @@
 <div
-  class="mt-8 flex-col pb-8 flex items-center justify-center gap-8 text-sm text-gray-600 md:flex-wrap sm:flex-row"
+  class="mt-4 flex-col pb-8 flex items-center justify-center gap-8 text-sm md:flex-wrap sm:flex-row"
 >
   {%
     set statuses = [
@@ -25,7 +25,7 @@
   {% for status in statuses %}
     <div class="flex items-center gap-2">
       <div class="h-3 w-3 {{ status.color }}"></div>
-      <span class="text-stone-700">{{ status.text }}</span>
+      <span class="text-color">{{ status.text }}</span>
     </div>
   {% endfor %}
 </div>
