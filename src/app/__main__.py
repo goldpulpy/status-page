@@ -19,7 +19,9 @@ from app.shared.exc_handlers import (
     not_found_handler,
     rate_limit_exception_handler,
 )
+from app.shared.log_filters import HealthCheckFilter
 
+logging.getLogger("uvicorn.access").addFilter(HealthCheckFilter())
 logging.getLogger("httpx").setLevel(logging.ERROR)
 logging.getLogger("httpcore").setLevel(logging.ERROR)
 logging.getLogger("aiosqlite").setLevel(logging.ERROR)
@@ -70,6 +72,7 @@ app.add_middleware(frontend.middlewares.SSRAuthMiddleware)
 app.add_middleware(frontend.middlewares.HTMLMinifyMiddleware)
 
 app.include_router(api.router)
+app.include_router(api.health.router)
 app.include_router(frontend.router)
 
 if config.app.is_development:
