@@ -26,11 +26,52 @@
 }
 
 @layer components {
-  .background {
-    @apply bg-stone-100;
+  .bg-color {
+    @apply bg-stone-50;
   }
-  .form-background {
+
+  .form-color {
     @apply bg-white;
+  }
+
+  .from-sub-color {
+    @apply bg-stone-50;
+  }
+
+  .form-border-color {
+    @apply border-stone-300;
+  }
+
+  .input-border-color {
+    @apply border-stone-200;
+  }
+
+  .input-ring-color {
+    @apply focus:ring-blue-500;
+  }
+
+  .button-border-color {
+    @apply border-stone-300;
+  }
+
+  .button-primary-color {
+    @apply bg-stone-50 text-black hover:bg-stone-100;
+  }
+
+  .title-color {
+    @apply text-stone-900;
+  }
+
+  .subtitle-color {
+    @apply text-stone-700;
+  }
+
+  .text-color {
+    @apply text-stone-900;
+  }
+
+  .icon-primary-color {
+    @apply text-stone-900;
   }
 }
 
