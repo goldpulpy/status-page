@@ -34,7 +34,7 @@
     @apply bg-white;
   }
 
-  .from-sub-color {
+  .form-sub-color {
     @apply bg-stone-50;
   }
 
@@ -71,7 +71,7 @@
   }
 
   .icon-primary-color {
-    @apply text-stone-900;
+    @apply text-stone-500;
   }
 
   .table-color {
