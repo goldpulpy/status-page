@@ -71,7 +71,7 @@
 
 @layer components {
   .button-primary-color {
-    @apply bg-button-primary text-black hover:bg-button-primary/90;
+    @apply bg-button-primary text-black hover:bg-gray-100;
   }
 }
 
