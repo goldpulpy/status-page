@@ -13,6 +13,7 @@
 
   --color-button-border: #e7e5e4;
   --color-button-primary: #fafaf9;
+  --color-button-hover: #d5d4d3;
 
   --color-title: #1c1917;
   --color-subtitle: #4b5563;
@@ -51,6 +52,7 @@
 
   --color-button-border: var(--color-button-border);
   --color-button-primary: var(--color-button-primary);
+  --color-button-hover: var(--color-button-hover);
 
   --color-title: var(--color-title);
   --color-subtitle: var(--color-subtitle);
@@ -71,7 +73,7 @@
 
 @layer components {
   .button-primary-color {
-    @apply bg-button-primary text-black hover:bg-gray-100;
+    @apply bg-button-primary text-primary hover:bg-button-hover;
   }
 }
 
