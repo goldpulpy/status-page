@@ -1,6 +1,14 @@
 @import "notyf/notyf.min.css";
 @import "tailwindcss";
 
+:root {
+  --color-operational: #22c55e;
+  --color-degraded: #eab308;
+  --color-partialoutage: #f97316;
+  --color-majoroutage: #dc2626;
+  --font-family-inter: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
 @font-face {
   font-family: "Inter";
   font-style: normal;
@@ -10,11 +18,20 @@
 }
 
 @theme {
-  --color-operational: #22c55e;
-  --color-degraded: #eab308;
-  --color-partialoutage: #f97316;
-  --color-majoroutage: #dc2626;
-  --font-family-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --color-operational: var(--color-operational);
+  --color-degraded: var(--color-degraded);
+  --color-partialoutage: var(--color-partialoutage);
+  --color-majoroutage: var(--color-majoroutage);
+  --font-family-sans: var(--font-family-inter);
+}
+
+@layer components {
+  .background {
+    @apply bg-stone-100;
+  }
+  .form-background {
+    @apply bg-white;
+  }
 }
 
 [x-cloak] {
@@ -22,7 +39,7 @@
 }
 
 body {
-  font-family: "Inter", sans-serif !important;
+  font-family: var(--font-family-inter) !important;
   -webkit-font-smoothing: antialiased !important;
   -moz-osx-font-smoothing: grayscale !important;
   text-rendering: optimizeLegibility !important;
