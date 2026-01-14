@@ -1,0 +1,81 @@
+================================================================================
+Status Page has been deployed successfully!                   
+================================================================================
+
+Chart Version: {{ .Chart.Version }}
+App Version: {{ .Chart.AppVersion }}
+Release: {{ .Release.Name }}
+Namespace: {{ .Release.Namespace }}
+
+================================================================================
+DEPLOYMENT INFORMATION
+================================================================================
+
+1. Get the application URL:
+
+{{- if .Values.ingress.enabled }}
+{{- range $host := .Values.ingress.hosts }}
+  {{- range .paths }}
+  http{{ if $.Values.ingress.tls }}s{{ end }}://{{ $host.host }}{{ .path }}
+  {{- end }}
+{{- end }}
+{{- else if contains "NodePort" .Values.service.type }}
+  export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "status-page.fullname" . }})
+  export NODE_IP=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath="{.items[0].status.addresses[0].address}")
+  echo "http://$NODE_IP:$NODE_PORT"
+{{- else if contains "LoadBalancer" .Values.service.type }}
+  NOTE: It may take a few minutes for the LoadBalancer IP to be available.
+        Watch the status with: kubectl get --namespace {{ .Release.Namespace }} svc -w {{ include "status-page.fullname" . }}
+  
+  export SERVICE_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ include "status-page.fullname" . }} --template "{{"{{ range (index .status.loadBalancer.ingress 0) }}{{.}}{{ end }}"}}")
+  echo "http://$SERVICE_IP:{{ .Values.service.port }}"
+{{- else if contains "ClusterIP" .Values.service.type }}
+  kubectl --namespace {{ .Release.Namespace }} port-forward svc/{{ include "status-page.fullname" . }} 8080:{{ .Values.service.port }}
+  echo "Visit http://127.0.0.1:8080 in your browser"
+{{- end }}
+
+2. Admin Panel URL:
+   Access the admin panel at: {{ .Values.config.adminPath }}
+
+3. View application logs:
+   kubectl logs -f -l app.kubernetes.io/name={{ include "status-page.name" . }} -n {{ .Release.Namespace }}
+
+4. Get pod status:
+   kubectl get pods -l app.kubernetes.io/name={{ include "status-page.name" . }} -n {{ .Release.Namespace }}
+
+================================================================================
+SECURITY NOTES
+================================================================================
+
+{{- if not .Values.secrets.existingSecret }}
+⚠️  WARNING: You are using inline secrets in values.yaml
+   This is NOT recommended for production!
+   
+   Consider using:
+   - Sealed Secrets: https://github.com/bitnami-labs/sealed-secrets
+   - External Secrets Operator: https://external-secrets.io
+   - HashiCorp Vault: https://www.vaultproject.io
+{{- end }}
+
+Admin credentials:
+{{- if .Values.secrets.existingSecret }}
+  Stored in secret: {{ .Values.secrets.existingSecret }}
+{{- else }}
+  Username: {{ .Values.secrets.adminUsername }}
+  Password: [REDACTED - Check your values file]
+{{- end }}
+
+================================================================================
+UPGRADE INFORMATION
+================================================================================
+
+To upgrade this release:
+  helm upgrade {{ .Release.Name }} {{ .Chart.Name }} -n {{ .Release.Namespace }}
+
+To rollback to previous version:
+  helm rollback {{ .Release.Name }} -n {{ .Release.Namespace }}
+
+To uninstall this release:
+  helm uninstall {{ .Release.Name }} -n {{ .Release.Namespace }}
+
+================================================================================
