@@ -13,11 +13,11 @@
       },
       {
         "text": "Partial Outage",
-        "color": "bg-partial-outage"
+        "color": "bg-partial"
       },
       {
         "text": "Major Outage",
-        "color": "bg-major-outage"
+        "color": "bg-major"
       }
     ]
   %}
@@ -25,7 +25,7 @@
   {% for status in statuses %}
     <div class="flex items-center gap-2">
       <div class="h-3 w-3 {{ status.color }}"></div>
-      <span class="text-text-primary">{{ status.text }}</span>
+      <span class="text-primary">{{ status.text }}</span>
     </div>
   {% endfor %}
 </div>

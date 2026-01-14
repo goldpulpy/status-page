@@ -44,7 +44,7 @@
             fill_rule=variant.fill_rule
             )
           }}
-          <p class="text-sm text-tooltip-text">{{ variant.text }}</p>
+          <p class="text-sm text-tooltip">{{ variant.text }}</p>
         </div>
       </template>
     {% endfor %}
@@ -53,7 +53,7 @@
       <template x-for="incident in tooltip.incidents" :key="incident.id">
         <div class="flex items-center gap-2">
           {{ status_icon(x_trigger="incident.type", size="sm") }}
-          <p class="text-sm text-tooltip-text" x-text="incident.tooltip"></p>
+          <p class="text-sm text-tooltip" x-text="incident.tooltip"></p>
         </div>
       </template>
     </template>

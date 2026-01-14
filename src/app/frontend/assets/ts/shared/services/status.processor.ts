@@ -102,7 +102,7 @@ export class StatusProcessor {
       });
 
       if (!hasActiveMonitor) {
-        return { color: "bg-empty-status", index: dayIndex };
+        return { color: "bg-empty", index: dayIndex };
       }
       const dayIncidents = incidentsByDay.get(dayIndex) ?? [];
 

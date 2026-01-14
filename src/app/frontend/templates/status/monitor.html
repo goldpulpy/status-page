@@ -6,7 +6,7 @@
       <template x-if="item.type === 'group'">
         <div>
           <h3
-            class="text-lg sm:text-xl font-bold text-text-title"
+            class="text-lg sm:text-xl font-bold text-title"
             x-text="item.name"
           ></h3>
           <div class="space-y-4">
@@ -28,7 +28,7 @@
     <div class="my-1 flex items-center gap-2">
       {{ status_icon(x_trigger=x_item + "?.currentIncident?.type", size="sm") }}
       <span
-        class="font-medium text-sm sm:text-base text-text-primary"
+        class="font-medium text-sm sm:text-base text-primary"
         x-text="{{ x_item }}.name"
       ></span>
     </div>
