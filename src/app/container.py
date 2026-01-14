@@ -15,6 +15,7 @@ from app.api.slowapi import rate_limit_func
 from app.monitoring.manager import WorkerManager
 from app.monitoring.scheduler import WorkerScheduler
 from app.repositories.uow import SqlAlchemyUnitOfWork
+from app.services.health.db import DatabaseHealthCheckService
 from app.shared import config
 
 
@@ -46,6 +47,11 @@ class Container(containers.DeclarativeContainer):
 
     uow_factory = providers.Factory(
         SqlAlchemyUnitOfWork,
+        session_factory=db.session_factory,
+    )
+
+    database_health = providers.Factory(
+        DatabaseHealthCheckService,
         session_factory=db.session_factory,
     )
 
