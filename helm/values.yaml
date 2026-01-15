@@ -43,39 +43,83 @@ secrets:
 # ============================================
 #           PostgreSQL Configuration
 # ============================================
-postgresql:
+postgres:
   enabled: true
+
+  image:
+    registry: docker.io
+    repository: postgres
+    tag: "17-alpine"
+    pullPolicy: IfNotPresent
+
   auth:
-    username: statuspage
+    # Database configuration
     database: statuspage
-    # Generate password automatically or use existing secret
+    username: statuspage
+    password: "" # Set via --set or use existingSecret
+
+    # Use existing secret (recommended for production)
     existingSecret: ""
-    secretKeys:
-      secretPasswordKey: password
+    passwordKey: postgres-password
 
-  primary:
-    persistence:
-      enabled: true
-      size: 2Gi
-      storageClass: ""
+    # Annotations for secret
+    annotations: {}
 
-    resources:
-      limits:
-        cpu: 500m
-        memory: 512Mi
-      requests:
-        cpu: 250m
-        memory: 256Mi
+  persistence:
+    enabled: false # Set to true for production
+    storageClass: ""
+    accessModes:
+      - ReadWriteOnce
+    size: 2Gi
+    annotations: {}
 
-  # External PostgreSQL configuration (if enabled: false)
+    # Optional: selector to bind to specific PV
+    selector: {}
+
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 250m
+      memory: 256Mi
+
+  securityContext:
+    enabled: true
+    fsGroup: 999
+    runAsUser: 999
+
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+
+  readinessProbe:
+    enabled: true
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+
+  service:
+    annotations: {}
+
+  nodeSelector: {}
+
+  # External PostgreSQL (if enabled: false)
   external:
+    enabled: false
     host: ""
     port: 5432
-    database: "statuspage"
-    username: "statuspage"
-    # Password should be in existing secret
+    database: statuspage
+    username: statuspage
+    password: ""
+
+    # Use existing secret (recommended for production)
     existingSecret: ""
-    existingSecretPasswordKey: "postgres-password"
+    passwordKey: postgres-password
 
 # ============================================
 #           Service Account
@@ -120,10 +164,7 @@ service:
   clusterIP: ""
   loadBalancerIP: ""
   loadBalancerSourceRanges: []
-  externalTrafficPolicy: Cluster
   annotations: {}
-  sessionAffinity: None
-  sessionAffinityConfig: {}
 
 # ============================================
 #           Ingress Configuration

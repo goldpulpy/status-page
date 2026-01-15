@@ -1,5 +1,5 @@
 ================================================================================
-Status Page has been deployed successfully!                   
+                   Status Page has been deployed successfully!
 ================================================================================
 
 Chart Version: {{ .Chart.Version }}
@@ -8,7 +8,7 @@ Release: {{ .Release.Name }}
 Namespace: {{ .Release.Namespace }}
 
 ================================================================================
-DEPLOYMENT INFORMATION
+                            ACCESSING THE APPLICATION
 ================================================================================
 
 1. Get the application URL:
@@ -26,8 +26,8 @@ DEPLOYMENT INFORMATION
 {{- else if contains "LoadBalancer" .Values.service.type }}
   NOTE: It may take a few minutes for the LoadBalancer IP to be available.
         Watch the status with: kubectl get --namespace {{ .Release.Namespace }} svc -w {{ include "status-page.fullname" . }}
-  
-  export SERVICE_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ include "status-page.fullname" . }} --template "{{"{{ range (index .status.loadBalancer.ingress 0) }}{{.}}{{ end }}"}}")
+
+  export SERVICE_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ include "status-page.fullname" . }} --template "{{ "{{" }} range (index .status.loadBalancer.ingress 0) {{ "}}" }}{{ "{{" }}.{{ "}}" }}{{ "{{" }} end {{ "}}" }}")
   echo "http://$SERVICE_IP:{{ .Values.service.port }}"
 {{- else if contains "ClusterIP" .Values.service.type }}
   kubectl --namespace {{ .Release.Namespace }} port-forward svc/{{ include "status-page.fullname" . }} 8080:{{ .Values.service.port }}
@@ -37,45 +37,131 @@ DEPLOYMENT INFORMATION
 2. Admin Panel URL:
    Access the admin panel at: {{ .Values.config.adminPath }}
 
-3. View application logs:
-   kubectl logs -f -l app.kubernetes.io/name={{ include "status-page.name" . }} -n {{ .Release.Namespace }}
-
-4. Get pod status:
-   kubectl get pods -l app.kubernetes.io/name={{ include "status-page.name" . }} -n {{ .Release.Namespace }}
+3. Check application health:
+   kubectl exec -n {{ .Release.Namespace }} deploy/{{ include "status-page.fullname" . }} -- curl -s http://localhost:{{ .Values.config.port }}/health
 
 ================================================================================
-SECURITY NOTES
+                                 SECURITY NOTES
 ================================================================================
-
 {{- if not .Values.secrets.existingSecret }}
-⚠️  WARNING: You are using inline secrets in values.yaml
+⚠️  WARNING: Using inline secrets from values.yaml
    This is NOT recommended for production!
-   
-   Consider using:
-   - Sealed Secrets: https://github.com/bitnami-labs/sealed-secrets
-   - External Secrets Operator: https://external-secrets.io
-   - HashiCorp Vault: https://www.vaultproject.io
+
+Create a Kubernetes secret:
+  kubectl create secret generic status-page-secrets \
+    --from-literal=ADMIN_USERNAME=admin \
+    --from-literal=ADMIN_PASSWORD=$(openssl rand -base64 16) \
+    --from-literal=JWT_SECRET=$(openssl rand -base64 32) \
+    -n {{ .Release.Namespace }}
+
+Then upgrade with:
+  helm upgrade {{ .Release.Name }} {{ .Chart.Name }} \
+    --set secrets.existingSecret=status-page-secrets \
+    -n {{ .Release.Namespace }}
 {{- end }}
 
-Admin credentials:
+{{- if and .Values.postgres.enabled (not .Values.postgres.auth.existingSecret) }}
+⚠️  WARNING: PostgreSQL password is inline
+Create a secret:
+  kubectl create secret generic status-page-postgres \
+    --from-literal=password=$(openssl rand -base64 16) \
+    -n {{ .Release.Namespace }}
+
+Then upgrade with:
+  helm upgrade {{ .Release.Name }} {{ .Chart.Name }} \
+    --set postgres.auth.existingSecret=status-page-postgres \
+    -n {{ .Release.Namespace }}
+{{- end }}
+
+Admin Credentials:
 {{- if .Values.secrets.existingSecret }}
-  Stored in secret: {{ .Values.secrets.existingSecret }}
+  ✓ Securely stored in: {{ .Values.secrets.existingSecret }}
+
+  Retrieve username:
+    kubectl get secret {{ .Values.secrets.existingSecret }} \
+      -n {{ .Release.Namespace }} \
+      -o jsonpath='{.data.ADMIN_USERNAME}' | base64 -d && echo
+
+  Retrieve password:
+    kubectl get secret {{ .Values.secrets.existingSecret }} \
+      -n {{ .Release.Namespace }} \
+      -o jsonpath='{.data.ADMIN_PASSWORD}' | base64 -d && echo
 {{- else }}
   Username: {{ .Values.secrets.adminUsername }}
-  Password: [REDACTED - Check your values file]
+  Password: [Check your values file]
+
+  Retrieve from secret:
+    kubectl get secret {{ include "status-page.fullname" . }}-secrets \
+      -n {{ .Release.Namespace }} \
+      -o jsonpath='{.data.ADMIN_PASSWORD}' | base64 -d && echo
 {{- end }}
 
 ================================================================================
-UPGRADE INFORMATION
+                                 TROUBLESHOOTING
 ================================================================================
 
-To upgrade this release:
+If pods are not starting:
+
+1. Check pod events:
+   kubectl describe pod -l app.kubernetes.io/name={{ include "status-page.name" . }} -n {{ .Release.Namespace }}
+
+2. Check secrets exist:
+   kubectl get secrets -n {{ .Release.Namespace }} | grep {{ include "status-page.fullname" . }}
+
+3. Verify database connectivity:
+   kubectl exec -n {{ .Release.Namespace }} deploy/{{ include "status-page.fullname" . }} -- \
+     nc -zv {{ include "status-page.postgres.host" . }} {{ include "status-page.postgres.port" . }}
+
+4. Check resource constraints:
+   kubectl top pods -n {{ .Release.Namespace }}
+
+{{- if .Values.ingress.enabled }}
+If Ingress is not working:
+
+1. Check Ingress status:
+   kubectl get ingress {{ include "status-page.fullname" . }} -n {{ .Release.Namespace }}
+
+2. Describe Ingress for events:
+   kubectl describe ingress {{ include "status-page.fullname" . }} -n {{ .Release.Namespace }}
+
+3. Verify Ingress controller:
+   kubectl get pods -n ingress-nginx
+
+{{- if .Values.ingress.tls }}
+4. Check TLS certificate:
+   kubectl get certificate -n {{ .Release.Namespace }}
+   kubectl describe certificate -n {{ .Release.Namespace }}
+{{- end }}
+{{- end }}
+
+Common issues:
+  • ImagePullBackOff: Check image registry and credentials
+  • CrashLoopBackOff: Check application logs
+  • Pending: Check resource quotas and PVC binding
+
+================================================================================
+                              UPGRADE & MAINTENANCE
+================================================================================
+
+Upgrade this release:
   helm upgrade {{ .Release.Name }} {{ .Chart.Name }} -n {{ .Release.Namespace }}
 
-To rollback to previous version:
+Upgrade with new values:
+  helm upgrade {{ .Release.Name }} {{ .Chart.Name }} -f values-prod.yaml -n {{ .Release.Namespace }}
+
+View release history:
+  helm history {{ .Release.Name }} -n {{ .Release.Namespace }}
+
+Rollback to previous version:
   helm rollback {{ .Release.Name }} -n {{ .Release.Namespace }}
 
-To uninstall this release:
+Rollback to specific revision:
+  helm rollback {{ .Release.Name }} [REVISION] -n {{ .Release.Namespace }}
+
+Uninstall this release:
   helm uninstall {{ .Release.Name }} -n {{ .Release.Namespace }}
 
-================================================================================
+{{- if .Values.postgres.persistence.enabled }}
+⚠️  Note: PVC will NOT be deleted automatically!
+   To delete PVC: kubectl delete pvc {{ include "status-page.fullname" . }}-postgres-data -n {{ .Release.Namespace }}
+{{- end }}

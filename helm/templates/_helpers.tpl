@@ -60,88 +60,101 @@ Create the name of the service account to use
 {{- end }}
 
 {{/*
+Return the postgres image name
+*/}}
+{{- define "status-page.postgres.image" -}}
+{{- $registry := .Values.postgres.image.registry | default "" | toString | trim -}}
+{{- $repository := .Values.postgres.image.repository -}}
+{{- $tag := .Values.postgres.image.tag | toString -}}
+{{- if $registry }}
+{{- printf "%s/%s:%s" $registry $repository $tag -}}
+{{- else }}
+{{- printf "%s:%s" $repository $tag -}}
+{{- end }}
+{{- end }}
+
+{{/*
 PostgreSQL host
 */}}
-{{- define "status-page.postgresql.host" -}}
-{{- if .Values.postgresql.enabled }}
-{{- printf "%s-postgresql" (include "status-page.fullname" .) }}
-{{- else }}
-{{- .Values.postgresql.external.host }}
+{{- define "status-page.postgres.host" -}}
+{{- if .Values.postgres.enabled }}
+{{- printf "%s-postgres" (include "status-page.fullname" .) }}
+{{- else if .Values.postgres.external.enabled }}
+{{- .Values.postgres.external.host }}
 {{- end }}
 {{- end }}
 
 {{/*
 PostgreSQL port
 */}}
-{{- define "status-page.postgresql.port" -}}
-{{- if .Values.postgresql.enabled }}
+{{- define "status-page.postgres.port" -}}
+{{- if .Values.postgres.enabled }}
 {{- print "5432" }}
-{{- else }}
-{{- .Values.postgresql.external.port }}
+{{- else if .Values.postgres.external.enabled }}
+{{- .Values.postgres.external.port | default "5432" }}
 {{- end }}
 {{- end }}
 
 {{/*
 PostgreSQL database
 */}}
-{{- define "status-page.postgresql.database" -}}
-{{- if .Values.postgresql.enabled }}
-{{- .Values.postgresql.auth.database }}
-{{- else }}
-{{- .Values.postgresql.external.database }}
+{{- define "status-page.postgres.database" -}}
+{{- if .Values.postgres.enabled }}
+{{- .Values.postgres.auth.database }}
+{{- else if .Values.postgres.external.enabled }}
+{{- .Values.postgres.external.database }}
 {{- end }}
 {{- end }}
 
 {{/*
 PostgreSQL username
 */}}
-{{- define "status-page.postgresql.username" -}}
-{{- if .Values.postgresql.enabled }}
-{{- .Values.postgresql.auth.username }}
-{{- else }}
-{{- .Values.postgresql.external.username }}
+{{- define "status-page.postgres.username" -}}
+{{- if .Values.postgres.enabled }}
+{{- .Values.postgres.auth.username }}
+{{- else if .Values.postgres.external.enabled }}
+{{- .Values.postgres.external.username }}
 {{- end }}
 {{- end }}
 
 {{/*
 PostgreSQL secret name
 */}}
-{{- define "status-page.postgresql.secretName" -}}
-{{- if .Values.postgresql.enabled }}
-{{- if .Values.postgresql.auth.existingSecret }}
-{{- .Values.postgresql.auth.existingSecret }}
+{{- define "status-page.postgres.secretName" -}}
+{{- if .Values.postgres.enabled }}
+{{- if .Values.postgres.auth.existingSecret }}
+{{- .Values.postgres.auth.existingSecret }}
 {{- else }}
-{{- printf "%s-postgresql" (include "status-page.fullname" .) }}
+{{- printf "%s-postgres" (include "status-page.fullname" .) }}
 {{- end }}
+{{- else if .Values.postgres.external.enabled }}
+{{- if .Values.postgres.external.existingSecret }}
+{{- .Values.postgres.external.existingSecret }}
 {{- else }}
-{{- if .Values.postgresql.external.existingSecret }}
-{{- .Values.postgresql.external.existingSecret }}
-{{- else }}
-{{- include "status-page.fullname" . }}-secrets
+{{- printf "%s-postgres" (include "status-page.fullname" .) }}
 {{- end }}
 {{- end }}
 {{- end }}
-
-
 
 {{/*
-PostgreSQL secret password key
+PostgreSQL secret key
 */}}
-{{- define "status-page.postgresql.secretPasswordKey" -}}
-{{- if .Values.postgresql.enabled }}
-{{- if .Values.postgresql.auth.existingSecret }}
-{{- .Values.postgresql.auth.secretKeys.secretPasswordKey }}
+{{- define "status-page.postgres.secretKey" -}}
+{{- if .Values.postgres.enabled }}
+{{- if .Values.postgres.auth.existingSecret }}
+{{- .Values.postgres.auth.passwordKey }}
 {{- else }}
-{{- print "password" }}
+{{- printf "password" -}}
 {{- end }}
+{{- else if .Values.postgres.external.enabled }}
+{{- if .Values.postgres.external.existingSecret }}
+{{- .Values.postgres.external.passwordKey }}
 {{- else }}
-{{- if .Values.postgresql.external.existingSecret }}
-{{- .Values.postgresql.external.existingSecretPasswordKey }}
-{{- else }}
-{{- print "POSTGRES_PASSWORD" }}
+{{- printf "password" -}}
 {{- end }}
 {{- end }}
 {{- end }}
+
 
 {{/*
 Application secrets name
@@ -155,30 +168,15 @@ Application secrets name
 {{- end }}
 
 {{/*
-Image pull secrets
-*/}}
-{{- define "status-page.imagePullSecrets" -}}
-{{- if .Values.global.imagePullSecrets }}
-{{- range .Values.global.imagePullSecrets }}
-- name: {{ . }}
-{{- end }}
-{{- else if .Values.image.pullSecrets }}
-{{- range .Values.image.pullSecrets }}
-- name: {{ . }}
-{{- end }}
-{{- end }}
-{{- end }}
-
-{{/*
 Return the proper image name
 */}}
 {{- define "status-page.image" -}}
-{{- $registryName := .Values.image.registry -}}
-{{- $repositoryName := .Values.image.repository -}}
+{{- $registry := .Values.image.registry | default "" | toString | trim -}}
+{{- $repository := .Values.image.repository -}}
 {{- $tag := .Values.image.tag | toString -}}
-{{- if $registryName }}
-{{- printf "%s/%s:%s" $registryName $repositoryName $tag -}}
+{{- if $registry }}
+{{- printf "%s/%s:%s" $registry $repository $tag -}}
 {{- else }}
-{{- printf "%s:%s" $repositoryName $tag -}}
+{{- printf "%s:%s" $repository $tag -}}
 {{- end }}
 {{- end }}

@@ -1,6 +1,6 @@
 apiVersion: v2
 name: status-page
-description: A Helm chart for StatusPage application
+description: A Helm chart for Status Page application
 type: application
 version: 1.0.0
 appVersion: "1.0.0"
@@ -12,8 +12,3 @@ keywords:
 home: https://github.com/goldpulpy/status-page
 sources:
   - https://github.com/goldpulpy/status-page
-dependencies:
-  - name: postgresql
-    version: "16.7.27"
-    repository: https://charts.bitnami.com/bitnami
-    condition: postgresql.enabled

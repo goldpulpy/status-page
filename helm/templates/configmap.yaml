@@ -14,7 +14,7 @@ data:
   JWT_ISSUER: {{ .Values.config.jwt.issuer | quote }}
   JWT_EXPIRES_IN: {{ .Values.config.jwt.expiresIn | quote }}
   JWT_ALGORITHM: {{ .Values.config.jwt.algorithm | quote }}
-  POSTGRES_HOST: {{ include "status-page.postgresql.host" . | quote }}
-  POSTGRES_PORT: {{ include "status-page.postgresql.port" . | quote }}
-  POSTGRES_DB: {{ include "status-page.postgresql.database" . | quote }}
-  POSTGRES_USER: {{ include "status-page.postgresql.username" . | quote }}
+  POSTGRES_HOST: {{ include "status-page.postgres.host" . | quote }}
+  POSTGRES_PORT: {{ include "status-page.postgres.port" . | quote }}
+  POSTGRES_DB: {{ include "status-page.postgres.database" . | quote }}
+  POSTGRES_USER: {{ include "status-page.postgres.username" . | quote }}

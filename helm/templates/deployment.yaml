@@ -14,8 +14,6 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
-        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
         {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -47,16 +45,8 @@ spec:
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  {{- if .Values.postgresql.enabled }}
-                  name: {{ include "status-page.postgresql.secretName" . }}
-                  key: {{ include "status-page.postgresql.secretPasswordKey" . }}
-                  {{- else if .Values.postgresql.external.existingSecret }}
-                  name: {{ .Values.postgresql.external.existingSecret }}
-                  key: {{ .Values.postgresql.external.existingSecretPasswordKey }}
-                  {{- else }}
-                  name: {{ include "status-page.secretName" . }}
-                  key: POSTGRES_PASSWORD
-                  {{- end }}
+                  name: {{ include "status-page.postgres.secretName" . }}
+                  key: {{ include "status-page.postgres.secretKey" . }}
           envFrom:
             - configMapRef:
                 name: {{ include "status-page.fullname" . }}-config
@@ -64,11 +54,11 @@ spec:
                 name: {{ include "status-page.secretName" . }}
           {{- with .Values.livenessProbe }}
           livenessProbe:
-            {{- toYaml . | nindent 10 }}
+            {{- toYaml . | nindent 12 }}
           {{- end }}
           {{- with .Values.readinessProbe }}
           readinessProbe:
-            {{- toYaml . | nindent 10 }}
+            {{- toYaml . | nindent 12 }}
           {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
