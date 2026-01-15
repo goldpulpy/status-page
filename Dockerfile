@@ -13,6 +13,7 @@ RUN npm ci && npm cache clean --force
 COPY postcss.config.js tsconfig.json eslint.config.js .
 COPY scripts ./scripts
 COPY ./src/app/frontend/assets ./src/app/frontend/assets
+COPY ./src/app/frontend/templates ./src/app/frontend/templates
 
 RUN npm run build:all && rm -rf node_modules
 
