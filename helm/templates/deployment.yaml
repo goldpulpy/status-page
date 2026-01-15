@@ -27,6 +27,15 @@ spec:
       terminationGracePeriodSeconds: 30
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- if .Values.postgres.enabled }}
+      initContainers:
+        - name: wait-for-postgres
+          image: busybox:1.35
+          command: ['sh', '-c', 
+            'until nc -z {{ include "status-page.postgres.host" . }} {{ include "status-page.postgres.port" . }}; do 
+              sleep 2;
+            done']
+      {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

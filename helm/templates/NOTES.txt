@@ -44,6 +44,7 @@ Namespace: {{ .Release.Namespace }}
                                  SECURITY NOTES
 ================================================================================
 {{- if not .Values.secrets.existingSecret }}
+
 ⚠️  WARNING: Using inline secrets from values.yaml
    This is NOT recommended for production!
 
@@ -61,6 +62,7 @@ Then upgrade with:
 {{- end }}
 
 {{- if and .Values.postgres.enabled (not .Values.postgres.auth.existingSecret) }}
+
 ⚠️  WARNING: PostgreSQL password is inline
 Create a secret:
   kubectl create secret generic status-page-postgres \
@@ -162,6 +164,7 @@ Uninstall this release:
   helm uninstall {{ .Release.Name }} -n {{ .Release.Namespace }}
 
 {{- if .Values.postgres.persistence.enabled }}
+
 ⚠️  Note: PVC will NOT be deleted automatically!
    To delete PVC: kubectl delete pvc {{ include "status-page.fullname" . }}-postgres-data -n {{ .Release.Namespace }}
 {{- end }}
