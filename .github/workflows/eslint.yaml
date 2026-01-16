@@ -9,6 +9,7 @@ on:
       - "package*.json"
       - ".eslintrc.js"
 
+jobs:
   npm-lint:
     runs-on: ubuntu-latest
     steps:
