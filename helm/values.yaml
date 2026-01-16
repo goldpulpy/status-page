@@ -15,7 +15,7 @@ image:
 config:
   logLevel: INFO # DEBUG | INFO | WARNING | ERROR | CRITICAL
   environment: production # development | staging | production
-  organizationName: "OrgName"
+  organizationName: "OrgName" # Your organization name
   host: "0.0.0.0"
   port: 5000
   adminPath: "/admin"
@@ -23,6 +23,9 @@ config:
     issuer: "StatusPage"
     expiresIn: 3600 # 1 hour
     algorithm: "HS256"
+  cookie:
+    key: "token"
+    httpOnly: true
 
 # ============================================
 #           Secrets Configuration
