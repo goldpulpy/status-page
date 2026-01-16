@@ -5,6 +5,8 @@
 
 FROM node:22-alpine AS assets-builder
 
+ENV ENVIRONMENT=production
+
 WORKDIR /app
 
 COPY package.json package-lock.json .
