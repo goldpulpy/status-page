@@ -1,0 +1,45 @@
+name: Helm Chart Release to OCI
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "helm/**"
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  helm-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: "latest"
+
+      - name: Log in to GitHub Container Registry
+        run: |
+          echo ${{ secrets.GITHUB_TOKEN }} | helm registry login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Get chart version
+        id: chart
+        run: |
+          CHART_VERSION=$(helm show chart helm | grep '^version:' | awk '{print $2}')
+          CHART_NAME=$(helm show chart helm | grep '^name:' | awk '{print $2}')
+          echo "version=${CHART_VERSION}" >> $GITHUB_OUTPUT
+          echo "name=${CHART_NAME}" >> $GITHUB_OUTPUT
+
+      - name: Package Helm chart
+        run: |
+          helm package helm/
+
+      - name: Push to OCI registry
+        run: |
+          helm push ${{ steps.chart.outputs.name }}-${{ steps.chart.outputs.version }}.tgz oci://ghcr.io/${{ github.repository_owner }}

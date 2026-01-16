@@ -1,9 +1,20 @@
-name: Docker build
+name: Push to Docker Hub
 
 on:
   push:
     branches:
       - main
+    paths:
+      - "scripts/**"
+      - "src/**"
+      - "Dockerfile"
+      - ".dockerignore"
+      - "package*.json"
+      - "requirements.txt"
+      - "postcss.config.js"
+      - "tsconfig.json"
+      - "eslint.config.js"
+      - "entrypoint.sh"
 
 jobs:
   build-and-push:
