@@ -1,0 +1,26 @@
+name: Docker build
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "scripts/**"
+      - "src/**"
+      - "Dockerfile"
+      - ".dockerignore"
+      - "package*.json"
+      - "requirements.txt"
+      - "postcss.config.js"
+      - "tsconfig.json"
+      - "eslint.config.js"
+      - "entrypoint.sh"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the Docker image
+        run: docker build -t build:$(date +%s) .
