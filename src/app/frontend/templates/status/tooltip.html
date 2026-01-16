@@ -6,7 +6,7 @@
   x-cloak
   @mouseleave="setTooltip(null)"
   :style="tooltip.style"
-  class="hidden md:block fixed max-h-96 overflow-y-auto bg-white border border-stone-300 p-2 z-50 max-w-xs"
+  class="hidden md:block fixed max-h-96 overflow-y-auto bg-form border border-form-border p-2 z-50 max-w-xs"
 >
   <div>
     {%
@@ -14,7 +14,7 @@
         {
           "x_if": "!tooltip.incidents",
           "icon": "search",
-          "color": "gray",
+          "color": "primary",
           "text": "Not Found",
           "icon_variant": "outline",
           "fill_rule" : null
@@ -44,7 +44,7 @@
             fill_rule=variant.fill_rule
             )
           }}
-          <p class="text-sm text-gray-600">{{ variant.text }}</p>
+          <p class="text-sm text-tooltip">{{ variant.text }}</p>
         </div>
       </template>
     {% endfor %}
@@ -53,7 +53,7 @@
       <template x-for="incident in tooltip.incidents" :key="incident.id">
         <div class="flex items-center gap-2">
           {{ status_icon(x_trigger="incident.type", size="sm") }}
-          <p class="text-sm text-gray-600" x-text="incident.tooltip"></p>
+          <p class="text-sm text-tooltip" x-text="incident.tooltip"></p>
         </div>
       </template>
     </template>
