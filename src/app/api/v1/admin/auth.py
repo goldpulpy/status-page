@@ -28,11 +28,11 @@ limiter = Container.limiter()
 def set_auth_cookie(response: Response, token: str) -> None:
     """Set authentication cookie with proper security settings."""
     response.set_cookie(
-        key="token",
+        key=config.cookie.key,
         value=token,
-        httponly=True,
+        httponly=config.cookie.httponly,
         samesite="lax",
-        secure=config.app.is_production,
+        secure=config.cookie.secure,
         max_age=config.jwt.expires_in,
     )
 
