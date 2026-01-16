@@ -72,7 +72,8 @@ Status Page is a lightweight, self-hosted monitoring platform designed to provid
 
 ### Installation
 
-_⚠️ Important: Review [.env.example](.env.example) and update all credentials before deployment_
+> [!WARNING]
+> Review [.env.example](.env.example) and update all credentials before deployment
 
 <details>
 
@@ -117,7 +118,8 @@ docker compose ps
 
 <summary>Option 3: Helm Chart (for Kubernetes)</summary>
 
-_⚠️ Important: Review [values.yaml](helm/values.yaml)_
+> [!WARNING]
+> Important: Review [values.yaml](helm/values.yaml)
 
 ```bash
 # Download values.yaml or use --set
@@ -250,7 +252,8 @@ Interactive API documentation is available in development mode:
 
 - **Scalar API Reference** - `http://localhost:5000/docs`
 
-_Note: Documentation endpoints are disabled in production for security_
+> [!IMPORTANT]
+> Documentation endpoints are disabled in production for security
 
 ## Contributing
 
