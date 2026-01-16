@@ -31,7 +31,7 @@ def set_auth_cookie(response: Response, token: str) -> None:
         key="token",
         value=token,
         httponly=True,
-        samesite="none" if config.app.is_production else "lax",
+        samesite="lax",
         secure=config.app.is_production,
         max_age=config.jwt.expires_in,
     )
