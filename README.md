@@ -252,7 +252,8 @@ Interactive API documentation is available in development mode:
 
 - **Scalar API Reference** - `http://localhost:5000/docs`
 
-_Note: Documentation endpoints are disabled in production for security_
+> [!IMPORTANT]
+> Documentation endpoints are disabled in production for security
 
 ## Contributing
 
