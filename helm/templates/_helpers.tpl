@@ -144,16 +144,24 @@ PostgreSQL secret key
 {{- if .Values.postgres.auth.existingSecret }}
 {{- .Values.postgres.auth.passwordKey }}
 {{- else }}
-{{- printf "password" -}}
+{{- "password" -}}
 {{- end }}
 {{- else if .Values.postgres.external.enabled }}
 {{- if .Values.postgres.external.existingSecret }}
 {{- .Values.postgres.external.passwordKey }}
 {{- else }}
-{{- printf "password" -}}
+{{- "password" -}}
 {{- end }}
 {{- end }}
 {{- end }}
+
+{{/*
+Cookie secure flag
+*/}}
+{{- define "status-page.cookie.secure" -}}
+{{- $tls := .Values.ingress.tls | default list -}}
+{{- ternary "true" "false" (and .Values.ingress.enabled (gt (len $tls) 0)) -}}
+{{- end -}}
 
 
 {{/*
