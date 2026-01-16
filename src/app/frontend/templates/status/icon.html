@@ -1,6 +1,6 @@
 {% from "components/ui/icons.html" import icon %}
 
-{% macro status_icon(x_trigger, size="md") %}
+{% macro status_icon(x_trigger=null, size="md") %}
   {%
     set status_icons = {
       "operational": {
@@ -13,11 +13,11 @@
       },
       "partial_outage": {
         "icon": "warning",
-        "color": "text-partialoutage"
+        "color": "text-partial"
       },
       "major_outage": {
         "icon": "warning",
-        "color": "text-majoroutage"
+        "color": "text-major"
       }
     }
   %}

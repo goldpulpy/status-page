@@ -5,6 +5,8 @@
 
 FROM node:22-alpine AS assets-builder
 
+ENV ENVIRONMENT=production
+
 WORKDIR /app
 
 COPY package.json package-lock.json .
@@ -23,8 +25,8 @@ RUN npm run build:all && rm -rf node_modules
 
 FROM python:3.12-alpine
 
-LABEL version="1.0"
-LABEL description="Simple infrastructure status page"
+LABEL version="1.0" \
+      description="Simple infrastructure status page"
 
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 

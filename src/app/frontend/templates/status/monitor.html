@@ -2,10 +2,13 @@
 
 {% macro render(x_items="items") %}
   <template x-for="item in {{ x_items }}" :key="item.id">
-    <div class="bg-white border border-stone-300 p-4 sm:p-6 md:p-8 mb-6">
+    <div class="bg-form border border-form-border p-4 sm:p-6 md:p-8 mb-6">
       <template x-if="item.type === 'group'">
         <div>
-          <h3 class="text-lg sm:text-xl font-bold" x-text="item.name"></h3>
+          <h3
+            class="text-lg sm:text-xl font-bold text-title"
+            x-text="item.name"
+          ></h3>
           <div class="space-y-4">
             <template x-for="item in item.monitors" :key="item.id">
               {{ monitor(x_item="item") }}
@@ -25,7 +28,7 @@
     <div class="my-1 flex items-center gap-2">
       {{ status_icon(x_trigger=x_item + "?.currentIncident?.type", size="sm") }}
       <span
-        class="font-medium text-sm sm:text-base text-gray-700"
+        class="font-medium text-sm sm:text-base text-primary"
         x-text="{{ x_item }}.name"
       ></span>
     </div>
