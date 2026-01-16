@@ -115,7 +115,30 @@ docker compose ps
 
 <details>
 
-<summary>Option 3: Manual Deployment</summary>
+<summary>Option 3: Helm Chart (for Kubernetes)</summary>
+
+_⚠️ Important: Review [values.yaml](helm/values.yaml)_
+
+```bash
+# Download values.yaml or use --set
+mkdir -p status-page && cd status-page
+wget https://raw.githubusercontent.com/goldpulpy/status-page/main/helm/values.yaml
+
+# Install
+helm install status-page oci://ghcr.io/goldpulpy/status-page \
+  -f values.yaml \
+  --namespace status-page \
+  --create-namespace
+
+# Verify installation
+kubectl get all -n status-page
+```
+
+</details>
+
+<details>
+
+<summary>Option 4: Manual Deployment</summary>
 
 ```bash
 git clone https://github.com/goldpulpy/status-page

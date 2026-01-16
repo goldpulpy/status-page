@@ -1,0 +1,14 @@
+apiVersion: v2
+name: status-page
+description: A Helm chart for Status Page application
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+keywords:
+  - status-page
+  - monitoring
+  - status
+  - health
+home: https://github.com/goldpulpy/status-page
+sources:
+  - https://github.com/goldpulpy/status-page

@@ -1,0 +1,34 @@
+{{- if .Values.postgres.enabled }}
+{{- if .Values.postgres.persistence.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "status-page.fullname" . }}-postgres-data
+  labels:
+    {{- include "status-page.labels" . | nindent 4 }}
+    app.kubernetes.io/component: database
+  {{- with .Values.postgres.persistence.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    {{- range .Values.postgres.persistence.accessModes }}
+    - {{ . | quote }}
+    {{- end }}
+  {{- if .Values.postgres.persistence.storageClass }}
+  {{- if (eq "-" .Values.postgres.persistence.storageClass) }}
+  storageClassName: ""
+  {{- else }}
+  storageClassName: {{ .Values.postgres.persistence.storageClass | quote }}
+  {{- end }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.postgres.persistence.size | quote }}
+  {{- with .Values.postgres.persistence.selector }}
+  selector:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- end }}
+{{- end }}
