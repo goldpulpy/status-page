@@ -65,6 +65,20 @@ class JWTConfig(BaseConfig):
     )
 
 
+class CookieConfig(BaseConfig):
+    """JWT config class."""
+
+    key: str = "token"
+    secure: bool = False
+    httponly: bool = True
+
+    model_config = SettingsConfigDict(
+        env_prefix="COOKIE_",
+        extra="ignore",
+        frozen=True,
+    )
+
+
 class AdminConfig(BaseConfig):
     """Admin config class."""
 
@@ -113,6 +127,7 @@ class Config:
 
     app: ClassVar[APPConfig] = APPConfig()  # type: ignore[call-arg]
     jwt: ClassVar[JWTConfig] = JWTConfig()  # type: ignore[call-arg]
+    cookie: ClassVar[CookieConfig] = CookieConfig()  # type: ignore[call-arg]
     admin: ClassVar[AdminConfig] = AdminConfig()  # type: ignore[call-arg]
     db: ClassVar[DBConfig] = DBConfig()  # type: ignore[call-arg]
 
