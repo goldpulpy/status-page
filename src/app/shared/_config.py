@@ -37,9 +37,13 @@ class APPConfig(BaseConfig):
     host: str = "0.0.0.0"  # noqa: S104 # nosec
     port: int = Field(default=5000, ge=1, le=65535)
     environment: Environment = Environment.PRODUCTION
-    https: bool = False
     log_level: LogLevel = LogLevel.INFO
+    
     organization_name: str = "OrgName"
+    
+    https: bool = False
+
+    theme: str = "default"
 
     @property
     def is_production(self) -> bool:

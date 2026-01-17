@@ -1,36 +1,6 @@
 @import "notyf/notyf.min.css";
 @import "tailwindcss";
-
-:root {
-  --color-background: #fafaf9;
-
-  --color-form: #ffffff;
-  --color-subform: #fafaf9;
-  --color-form-border: #d7d3d1;
-
-  --color-input-border: #e7e5e4;
-  --color-input-ring: #2b7fff;
-
-  --color-button-border: #e7e5e4;
-  --color-button-primary: #fafaf9;
-  --color-button-hover: #d5d4d3;
-
-  --color-title: #1c1917;
-  --color-subtitle: #4b5563;
-  --color-primary: #1c1917;
-
-  --color-icon: #79716b;
-
-  --color-tooltip: #57534d;
-
-  --color-empty: #e7e5e4;
-  --color-operational: #22c55e;
-  --color-degraded: #eab308;
-  --color-partial: #f97316;
-  --color-major: #dc2626;
-
-  --font-family-inter: "Inter", ui-sans-serif, system-ui, sans-serif;
-}
+@import "./css/themes.css";
 
 @font-face {
   font-family: "Inter";
