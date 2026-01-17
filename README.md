@@ -52,7 +52,7 @@ Status Page is a lightweight, self-hosted monitoring platform designed to provid
 - [x] **Status Validation** - Verify response codes, content patterns, and latency thresholds
 - [x] **Service Grouping** - Organize monitors into logical groups for better visibility
 - [ ] **Notifications** - Notify when incidents occur
-- [x] **Theme Presets** - Ready-to-use color schemes and themes
+- [ ] **Theme Presets** - Ready-to-use color schemes and themes
 
 ### Technologies
 
