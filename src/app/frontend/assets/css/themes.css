@@ -91,34 +91,36 @@
   --color-background: #18181b;
   --color-form: #27272a;
   --color-subform: #1f1f23;
-  --color-button-bg-primary: #a855f7;
+  --color-button-bg-primary: #18181b;
+
   /* Borders */
   --color-form-border: #3f3f46;
   --color-input-border: #52525b;
-  --color-button-border: #9333ea;
+  --color-button-border: #3f3f46;
+
   /* Radius */
-  --radius-form: 0.5rem;
+  --radius-form: 0.375rem;
   --radius-input: 0.375rem;
   --radius-button: 0.375rem;
-  --radius-bar: 0.25rem;
-  --radius-legend: 0.5rem;
+
   /* Interactive */
-  --color-input-ring: #a855f7;
-  --color-button-hover: #9333ea;
+  --color-button-primary-hover: #52525b;
+
   /* Typography */
   --color-title: #f4f4f5;
   --color-subtitle: #d4d4d8;
   --color-primary: #fafafa;
   --color-tooltip: #a1a1aa;
+
   /* Icons */
-  --color-icon: #c084fc;
+  --color-icon: #fafafa;
+
   /* Status */
   --color-empty: #52525b;
   --color-operational: #4ade80;
   --color-degraded: #facc15;
   --color-partial: #fb923c;
   --color-major: #f87171;
-  --font-family-inter: "Inter", ui-sans-serif, system-ui, sans-serif;
 }
 
 /* ========== OCEAN BREEZE ========== */
@@ -164,11 +166,14 @@
   --color-form: #0a0a0a;
   --color-subform: #050505;
   --color-button-bg-primary: #000000;
+  --color-button-bg-red: #000000;
+  --color-button-bg-blue: #000000;
+  --color-button-bg-yellow: #000000;
 
   /* Borders */
   --color-form-border: #262626;
   --color-input-border: #404040;
-  --color-button-border: #2e2d2d;
+  --color-button-border: #ffffff;
 
   /* Radius */
   --radius-form: 0rem;
@@ -176,15 +181,20 @@
   --radius-button: 0rem;
   --radius-bar: 0rem;
   --radius-legend: 0rem;
+
   /* Interactive */
   --color-input-ring: #ffffff;
-  --color-button-hover: #262626;
+  --color-button-primary-hover: #262626;
+  --color-button-red-hover: #262626;
+  --color-button-blue-hover: #262626;
+  --color-button-yellow-hover: #262626;
 
   /* Typography */
   --color-title: #ffffff;
   --color-subtitle: #d4d4d4;
   --color-primary: #fafafa;
   --color-tooltip: #a3a3a3;
+
   /* Icons */
   --color-icon: #e5e5e5;
 
@@ -194,5 +204,4 @@
   --color-degraded: #facc15;
   --color-partial: #fb923c;
   --color-major: #f87171;
-  --font-family-inter: "Inter", ui-sans-serif, system-ui, sans-serif;
 }

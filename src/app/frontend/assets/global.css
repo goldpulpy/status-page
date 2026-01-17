@@ -80,6 +80,31 @@
   display: none !important;
 }
 
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-form);
+  border-radius: var(--radius-form);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-input-border);
+  border-radius: var(--radius-form);
+  border: 2px solid var(--color-form);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-subtitle);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-input-border) var(--color-form);
+}
+
 body {
   font-family: var(--font-family-inter) !important;
   -webkit-font-smoothing: antialiased !important;
