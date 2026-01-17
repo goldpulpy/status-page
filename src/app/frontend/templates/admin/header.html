@@ -21,7 +21,7 @@
             class="opacity-65 hover:opacity-100 transition-all duration-300 flex
             items-center gap-2 text-primary"
           {% endif %}
-          href="/{{ admin_path }}/{{ key }}"
+          href="/{{ request.state.admin_path }}/{{ key }}"
         >
           {{ icon(name=value.icon, size="sm", color="primary") }}
           {{ value.text }}
@@ -29,7 +29,7 @@
       </li>
     {% endfor %}
   </ul>
-  <div x-data="logout('{{ admin_path }}')">
+  <div x-data="logout('{{ request.state.admin_path }}')">
     {{
       button(
        text="Logout",

@@ -8,7 +8,6 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
 from app.container import Container
-from app.shared import config
 
 router = APIRouter()
 
@@ -24,9 +23,6 @@ async def monitors_page(
         "admin/monitors/index.html",
         {
             "request": request,
-            "admin_path": config.admin.safe_path,
-            "theme": config.app.theme.value,
             "current_page": "monitors",
-            "organization_name": config.app.organization_name,
         },
     )

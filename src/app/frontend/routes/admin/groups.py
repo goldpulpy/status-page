@@ -8,7 +8,6 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
 from app.container import Container
-from app.shared import config
 
 router = APIRouter()
 
@@ -24,9 +23,6 @@ async def groups_page(
         "admin/groups/index.html",
         {
             "request": request,
-            "admin_path": config.admin.safe_path,
-            "theme": config.app.theme.value,
             "current_page": "groups",
-            "organization_name": config.app.organization_name,
         },
     )

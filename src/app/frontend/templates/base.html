@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-theme="{{ theme }}">
+<html lang="en" data-theme="{{ request.state.theme }}">
   <head>
     <meta charset="UTF-8" />
 
@@ -34,7 +34,7 @@
 
     <meta
       name="apple-mobile-web-app-title"
-      content="{{ organization_name }} Status"
+      content="{{ request.state.organization_name }} Status"
     />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -46,7 +46,7 @@
       src="{{ url_for('static', path='main.min.js') }}"
     ></script>
 
-    <title>{{ organization_name }} Status</title>
+    <title>{{ request.state.organization_name }} Status</title>
   </head>
 
   <body class="bg-background h-full">

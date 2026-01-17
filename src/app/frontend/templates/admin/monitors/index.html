@@ -5,7 +5,7 @@
   {% include "admin/header.html" %}
 
   <main
-    x-data="monitors('{{ admin_path }}')"
+    x-data="monitors('{{ request.state.admin_path }}')"
     x-init="fetch()"
     class="container mx-auto px-6 pt-12 max-w-4xl mx-auto"
   >
