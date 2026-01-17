@@ -16,6 +16,9 @@
   --color-form: var(--color-form);
   --color-subform: var(--color-subform);
   --color-button-bg-primary: var(--color-button-bg-primary);
+  --color-button-bg-blue: var(--color-button-bg-blue);
+  --color-button-bg-red: var(--color-button-bg-red);
+  --color-button-bg-yellow: var(--color-button-bg-yellow);
 
   /* Borders */
   --color-form-border: var(--color-form-border);
@@ -24,7 +27,10 @@
 
   /* Interactive */
   --color-input-ring: var(--color-input-ring);
-  --color-button-hover: var(--color-button-hover);
+  --color-button-primary-hover: var(--color-button-primary-hover);
+  --color-button-red-hover: var(--color-button-hover);
+  --color-button-blue-hover: var(--color-button-hover);
+  --color-button-yellow-hover: var(--color-button-hover);
 
   /* Typography */
   --color-title: var(--color-title);
@@ -54,7 +60,19 @@
 
 @layer components {
   .button-primary-color {
-    @apply bg-button-bg-primary text-primary hover:bg-button-hover;
+    @apply bg-button-bg-primary text-primary hover:bg-button-primary-hover;
+  }
+
+  .button-red-color {
+    @apply bg-button-bg-red text-primary hover:bg-button-red-hover;
+  }
+
+  .button-blue-color {
+    @apply bg-button-bg-blue text-primary hover:bg-button-blue-hover;
+  }
+
+  .button-yellow-color {
+    @apply bg-button-bg-yellow text-primary hover:bg-button-yellow-hover;
   }
 }
 

@@ -7,6 +7,9 @@
   --color-form: #ffffff;
   --color-subform: #fafaf9;
   --color-button-bg-primary: #fafaf9;
+  --color-button-bg-blue: #2b7fff;
+  --color-button-bg-red: #fb2c36;
+  --color-button-bg-yellow: #f0b100;
 
   /* Borders */
   --color-form-border: #d7d3d1;
@@ -22,7 +25,10 @@
 
   /* Interactive */
   --color-input-ring: #2b7fff;
-  --color-button-hover: #d5d4d3;
+  --color-button-primary-hover: #d5d4d3;
+  --color-button-red-hover: #e7000b;
+  --color-button-blue-hover: #155dfb;
+  --color-button-yellow-hover: #d08700;
 
   /* Typography */
   --color-title: #1c1917;
