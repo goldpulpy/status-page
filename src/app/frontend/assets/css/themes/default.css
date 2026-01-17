@@ -50,7 +50,9 @@
   --color-tooltip: #57534d;
 
   /* Icons */
-  --color-icon: #79716b;
+  --color-icon-primary: #79716b;
+  --color-icon-white: #ffffff;
+  --color-icon-black: #000000;
 
   /* Status */
   --color-empty: #e7e5e4;

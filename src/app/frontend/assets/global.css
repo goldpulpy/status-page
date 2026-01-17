@@ -61,7 +61,9 @@
   --color-tooltip: var(--color-tooltip);
 
   /* Icons */
-  --color-icon: var(--color-icon);
+  --color-icon-primary: var(--color-icon-primary);
+  --color-icon-white: var(--color-icon-white);
+  --color-icon-black: var(--color-icon-black);
 
   /* Status */
   --color-empty: var(--color-empty);

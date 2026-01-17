@@ -19,7 +19,7 @@
   --radius-button: 0.375rem;
 
   /* Shadow */
-  --shadow-form: 0 4px 6px -1px #0000001a, 0 2px 4px -2px #0000001a;
+  --shadow-form: 0 1px 3px 0 #0000001a, 0 1px 2px -1px #0000001a;
 
   /* Typography */
   --color-title: #000000;
@@ -28,7 +28,7 @@
   --color-tooltip: #364153;
 
   /* Icons */
-  --color-icon: #101828;
+  --color-icon-primary: #101828;
 
   /* Status */
   --color-empty: #f7f7f8;
