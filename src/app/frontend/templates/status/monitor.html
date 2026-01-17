@@ -2,9 +2,7 @@
 
 {% macro render(x_items="items") %}
   <template x-for="item in {{ x_items }}" :key="item.id">
-    <div
-      class="bg-form border border-form-border rounded-form shadow-form p-4 sm:p-6 md:p-8 mb-6"
-    >
+    <div class="bg-form border border-form-border p-4 sm:p-6 md:p-8 mb-6">
       <template x-if="item.type === 'group'">
         <div>
           <h3
@@ -41,7 +39,7 @@
     >
       <template x-for="bar in {{ x_item }}.history" :key="bar.index">
         <span
-          class="relative flex-1 h-full hover:opacity-80 transition-opacity cursor-pointer rounded-bar"
+          class="relative flex-1 h-full hover:opacity-80 transition-opacity cursor-pointer"
           :class="bar.color"
           :data-index="bar.index"
         ></span>
