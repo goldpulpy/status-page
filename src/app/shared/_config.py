@@ -52,7 +52,6 @@ class APPConfig(BaseConfig):
 
     https: bool = False
 
-
     @property
     def is_production(self) -> bool:
         """Check if the environment is production."""
