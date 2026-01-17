@@ -33,7 +33,7 @@ class ContextMiddleware:
 
         if "state" not in scope:
             scope["state"] = {}
-        
+
         elif not isinstance(scope["state"], dict):
             logger.warning("Invalid state type in scope")
             scope["state"] = {}
