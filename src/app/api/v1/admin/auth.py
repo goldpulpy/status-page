@@ -30,9 +30,9 @@ def set_auth_cookie(response: Response, token: str) -> None:
     response.set_cookie(
         key=config.cookie.key,
         value=token,
-        httponly=config.cookie.httponly,
+        httponly=True,
         samesite="lax",
-        secure=config.cookie.secure,
+        secure=config.app.https,
         max_age=config.jwt.expires_in,
     )
 

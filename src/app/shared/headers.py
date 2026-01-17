@@ -29,7 +29,7 @@ def _build_csp_policy(nonce: str) -> str:
         "frame-ancestors 'none'",
     ]
 
-    if config.cookie.secure:
+    if config.app.https:
         directives.append("upgrade-insecure-requests")
 
     return "; ".join(directives) + ";"
@@ -40,7 +40,7 @@ def get_secure_headers(nonce: str) -> list[tuple[str, str]]:
     headers = list(STATIC_SECURITY_HEADERS)
     headers.append(("Content-Security-Policy", _build_csp_policy(nonce)))
 
-    if config.cookie.secure:
+    if config.app.https:
         headers.append(
             (
                 "Strict-Transport-Security",

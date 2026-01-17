@@ -1,5 +1,6 @@
 """Config module."""
 
+import secrets
 from enum import Enum
 from typing import ClassVar
 
@@ -36,6 +37,7 @@ class APPConfig(BaseConfig):
     host: str = "0.0.0.0"  # noqa: S104 # nosec
     port: int = Field(default=5000, ge=1, le=65535)
     environment: Environment = Environment.PRODUCTION
+    https: bool = False
     log_level: LogLevel = LogLevel.INFO
     organization_name: str = "OrgName"
 
@@ -53,7 +55,7 @@ class APPConfig(BaseConfig):
 class JWTConfig(BaseConfig):
     """JWT config class."""
 
-    secret: str = Field(min_length=32)
+    secret: str = Field(default_factory=lambda: secrets.token_hex(64))
     issuer: str = "StatusPage"
     expires_in: int = 3600
     algorithm: str = "HS256"

@@ -156,9 +156,9 @@ PostgreSQL secret key
 {{- end }}
 
 {{/*
-Cookie secure flag
+Application use https
 */}}
-{{- define "status-page.cookie.secure" -}}
+{{- define "status-page.https" -}}
 {{- $tls := .Values.ingress.tls | default list -}}
 {{- ternary "true" "false" (and .Values.ingress.enabled (gt (len $tls) 0)) -}}
 {{- end -}}
