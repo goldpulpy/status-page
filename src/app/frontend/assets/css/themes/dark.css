@@ -3,7 +3,11 @@
   --color-background: #18181b;
   --color-form: #27272a;
   --color-subform: #1f1f23;
+
+  /* Button primary */
   --color-button-bg-primary: #18181b;
+  --color-button-hover-primary: #1d1d20;
+  --color-button-text-primary: #fafafa;
 
   /* Borders */
   --color-form-border: #3f3f46;

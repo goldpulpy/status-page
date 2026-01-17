@@ -41,17 +41,24 @@
   --color-input-border: var(--color-input-border);
   --color-button-border: var(--color-button-border);
 
+  /* Radius */
+  --radius-form: var(--radius-form);
+  --radius-input: var(--radius-input);
+  --radius-button: var(--radius-button);
+  --radius-bar: var(--radius-bar);
+  --radius-legend: var(--radius-legend);
+
   /* Interactive */
   --color-input-ring: var(--color-input-ring);
+
+  /* Status */
+  --shadow-form: var(--shadow-form);
 
   /* Typography */
   --color-title: var(--color-title);
   --color-subtitle: var(--color-subtitle);
   --color-primary: var(--color-primary);
   --color-tooltip: var(--color-tooltip);
-
-  /* Status */
-  --shadow-form: var(--shadow-form);
 
   /* Icons */
   --color-icon: var(--color-icon);
@@ -62,13 +69,6 @@
   --color-degraded: var(--color-degraded);
   --color-partial: var(--color-partial);
   --color-major: var(--color-major);
-
-  /* Radius */
-  --radius-form: var(--radius-form);
-  --radius-input: var(--radius-input);
-  --radius-button: var(--radius-button);
-  --radius-bar: var(--radius-bar);
-  --radius-legend: var(--radius-legend);
 
   --font-family-sans: var(--font-family-inter);
 }

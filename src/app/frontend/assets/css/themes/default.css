@@ -37,11 +37,11 @@
   --radius-bar: 0rem;
   --radius-legend: 0rem;
 
-  /* Shadows */
-  --shadow-form: none;
-
   /* Interactive */
   --color-input-ring: #2b7fff;
+
+  /* Shadows */
+  --shadow-form: none;
 
   /* Typography */
   --color-title: #1c1917;
