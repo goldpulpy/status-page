@@ -15,7 +15,7 @@
   --color-background: var(--color-background);
   --color-form: var(--color-form);
   --color-subform: var(--color-subform);
-  --color-button-primary: var(--color-button-primary);
+  --color-button-bg-primary: var(--color-button-bg-primary);
 
   /* Borders */
   --color-form-border: var(--color-form-border);
@@ -54,7 +54,7 @@
 
 @layer components {
   .button-primary-color {
-    @apply bg-button-primary text-primary hover:bg-button-hover;
+    @apply bg-button-bg-primary text-primary hover:bg-button-hover;
   }
 }
 
