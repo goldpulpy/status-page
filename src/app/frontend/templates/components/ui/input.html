@@ -44,7 +44,7 @@
         {% if required %}required{% endif %}
         {% if placeholder %}placeholder="{{ placeholder }}"{% endif %}
         {% if x_bind_disabled %}:disabled="{{ x_bind_disabled }}"{% endif %}
-        class="w-full border border-input-border text-primary
+        class="w-full border border-input-border text-primary rounded-input
               {% if icon %}pl-10{% else %}pl-4{% endif %} pr-4 py-2.5 text-sm
               focus:ring-2 focus:ring-input-ring focus:border-transparent outline-none
               transition {{ class }}"
@@ -90,7 +90,7 @@
       {% if required %}required aria-required="true"{% endif %}
       {% if placeholder %}placeholder="{{ placeholder }}"{% endif %}
       {% if x_bind_disabled %}:disabled="{{ x_bind_disabled }}"{% endif %}
-      class="w-full border border-input-border px-4 py-2.5 text-sm text-primary
+      class="w-full border border-input-border px-4 py-2.5 text-sm text-primary rounded-input
               focus:ring-2 focus:ring-input-ring focus:border-transparent outline-none
               transition {{ class }}"
     ></textarea>
@@ -153,7 +153,7 @@
           :disabled="{{ x_bind_disabled }}"
           :aria-disabled="{{ x_bind_disabled }}"
         {% endif %}
-        class="w-full border border-input-border px-4 py-2.5 text-sm text-primary
+        class="w-full border border-input-border px-4 py-2.5 text-sm text-primary rounded-input
               focus:ring-2 focus:ring-input-ring focus:border-transparent outline-none
               transition {{ class }}"
       >

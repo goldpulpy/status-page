@@ -1,19 +1,37 @@
 :root,
 [data-theme="default"] {
+  /* Backgrounds */
   --color-background: #fafaf9;
   --color-form: #ffffff;
   --color-subform: #fafaf9;
+  --color-button-primary: #fafaf9;
+
+  /* Borders */
   --color-form-border: #d7d3d1;
   --color-input-border: #e7e5e4;
-  --color-input-ring: #2b7fff;
   --color-button-border: #e7e5e4;
-  --color-button-primary: #fafaf9;
+
+  /* Radius */
+  --radius-form: 0rem;
+  --radius-input: 0rem;
+  --radius-button: 0rem;
+  --radius-bar: 0rem;
+  --radius-legend: 0rem;
+
+  /* Interactive */
+  --color-input-ring: #2b7fff;
   --color-button-hover: #d5d4d3;
+
+  /* Typography */
   --color-title: #1c1917;
   --color-subtitle: #4b5563;
   --color-primary: #1c1917;
-  --color-icon: #79716b;
   --color-tooltip: #57534d;
+
+  /* Icons */
+  --color-icon: #79716b;
+
+  /* Status */
   --color-empty: #e7e5e4;
   --color-operational: #22c55e;
   --color-degraded: #eab308;
@@ -23,24 +41,68 @@
   --font-family-inter: "Inter", ui-sans-serif, system-ui, sans-serif;
 }
 
+[data-theme="modern"] {
+  /* Backgrounds */
+  --color-background: #f9fafb;
+  --color-subform: #f9fafb;
+
+  /* Borders */
+  --color-form-border: #e5e7eb;
+  --color-input-border: #e7e5e4;
+  --color-button-border: #e7e5e4;
+
+  /* Interactive */
+  --color-button-hover: #d1d5db;
+
+  /* Radius */
+  --radius-form: 0.375rem;
+  --radius-input: 0.375rem;
+  --radius-button: 0.375rem;
+
+  /* Typography */
+  --color-title: #000000;
+  --color-subtitle: #1e2939;
+  --color-primary: #000000;
+  --color-tooltip: #364153;
+
+  /* Icons */
+  --color-icon: #101828;
+
+  /* Status */
+  --color-empty: #f7f7f8;
+  --color-operational: #24c19a;
+  --color-degraded: #fbbf24;
+  --color-partial: #f5785c;
+  --color-major: #f55c5c;
+}
+
 [data-theme="dark"] {
-  --color-background: #18181b;
-  --color-form: #27272a;
-  --color-subform: #1f1f23;
-  --color-form-border: #3f3f46;
-  --color-input-border: #52525b;
-  --color-input-ring: #60a5fa;
-  --color-button-border: #52525b;
-  --color-button-primary: #3f3f46;
-  --color-button-hover: #52525b;
-  --color-title: #fafafa;
-  --color-subtitle: #d4d4d8;
-  --color-primary: #ffffff;
-  --color-icon: #a1a1aa;
-  --color-tooltip: #e4e4e7;
-  --color-empty: #52525b;
+  --color-background: #0f172a;
+  --color-form: #020617;
+  --color-subform: #020617;
+  --color-button-primary: #1e293b;
+
+  --color-form-border: #1e293b;
+  --color-input-border: #334155;
+  --color-button-border: #334155;
+
+  --color-input-ring: #3b82f6;
+  --color-button-hover: #1e293b;
+
+  --color-title: #f8fafc;
+  --color-subtitle: #cbd5f5;
+  --color-primary: #e5e7eb;
+  --color-tooltip: #94a3b8;
+
+  --color-icon: #94a3b8;
+
+  --color-empty: #1e293b;
   --color-operational: #22c55e;
-  --color-degraded: #facc15;
+  --color-degraded: #eab308;
   --color-partial: #fb923c;
   --color-major: #ef4444;
+
+  --radius-form: 0.5rem;
+  --radius-input: 0.5rem;
+  --radius-button: 0.5rem;
 }

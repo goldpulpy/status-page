@@ -11,32 +11,43 @@
 }
 
 @theme {
+  /* Backgrounds */
   --color-background: var(--color-background);
-
   --color-form: var(--color-form);
   --color-subform: var(--color-subform);
-  --color-form-border: var(--color-form-border);
-
-  --color-input-border: var(--color-input-border);
-  --color-input-ring: var(--color-input-ring);
-
-  --color-button-border: var(--color-button-border);
   --color-button-primary: var(--color-button-primary);
+
+  /* Borders */
+  --color-form-border: var(--color-form-border);
+  --color-input-border: var(--color-input-border);
+  --color-button-border: var(--color-button-border);
+
+  /* Interactive */
+  --color-input-ring: var(--color-input-ring);
   --color-button-hover: var(--color-button-hover);
 
+  /* Typography */
   --color-title: var(--color-title);
   --color-subtitle: var(--color-subtitle);
   --color-primary: var(--color-primary);
-
-  --color-icon: var(--color-icon);
-
   --color-tooltip: var(--color-tooltip);
 
+  /* Icons */
+  --color-icon: var(--color-icon);
+
+  /* Status */
   --color-empty: var(--color-empty);
   --color-operational: var(--color-operational);
   --color-degraded: var(--color-degraded);
   --color-partial: var(--color-partial);
   --color-major: var(--color-major);
+
+  /* Radius */
+  --radius-form: var(--radius-form);
+  --radius-input: var(--radius-input);
+  --radius-button: var(--radius-button);
+  --radius-bar: var(--radius-bar);
+  --radius-legend: var(--radius-legend);
 
   --font-family-sans: var(--font-family-inter);
 }
