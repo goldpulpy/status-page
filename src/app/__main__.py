@@ -101,4 +101,5 @@ if __name__ == "__main__":
         timeout_keep_alive=5,
         timeout_graceful_shutdown=10,
         server_header=not config.app.is_production,
+        h11_max_incomplete_event_size=16 * 1024,  # 16KB
     )
