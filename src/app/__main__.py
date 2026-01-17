@@ -58,6 +58,7 @@ app = FastAPI(
     openapi_url=None if config.app.is_production else "/openapi.json",
 )
 
+
 app.mount(
     "/static",
     StaticFiles(directory=Path(__file__).parent / "frontend" / "static"),
@@ -69,6 +70,7 @@ app.add_exception_handler(RateLimitExceeded, rate_limit_exception_handler)
 
 app.add_middleware(api.middlewares.APIAuthMiddleware)
 app.add_middleware(frontend.middlewares.SSRAuthMiddleware)
+app.add_middleware(frontend.middlewares.CSPNonceMiddleware)
 app.add_middleware(frontend.middlewares.HTMLMinifyMiddleware)
 
 app.include_router(api.router)
@@ -95,4 +97,9 @@ if __name__ == "__main__":
         app,
         host=config.app.host,
         port=config.app.port,
+        limit_concurrency=1000,
+        timeout_keep_alive=5,
+        timeout_graceful_shutdown=10,
+        server_header=not config.app.is_production,
+        h11_max_incomplete_event_size=16 * 1024,  # 16KB
     )

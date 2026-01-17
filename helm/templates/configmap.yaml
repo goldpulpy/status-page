@@ -10,13 +10,12 @@ data:
   ORGANIZATION_NAME: {{ .Values.config.organizationName | quote }}
   HOST: {{ .Values.config.host | quote }}
   PORT: {{ .Values.config.port | quote }}
+  HTTPS: {{ include "status-page.https" . | quote }}
   ADMIN_PATH: {{ .Values.config.adminPath | quote }}
+  COOKIE_KEY: {{ .Values.config.cookie.key | quote }}
   JWT_ISSUER: {{ .Values.config.jwt.issuer | quote }}
   JWT_EXPIRES_IN: {{ .Values.config.jwt.expiresIn | quote }}
   JWT_ALGORITHM: {{ .Values.config.jwt.algorithm | quote }}
-  COOKIE_KEY: {{ .Values.config.cookie.key | quote }}
-  COOKIE_HTTPONLY: {{ .Values.config.cookie.httpOnly | quote }}
-  COOKIE_SECURE: {{ include "status-page.cookie.secure" . | quote }}
   POSTGRES_HOST: {{ include "status-page.postgres.host" . | quote }}
   POSTGRES_PORT: {{ include "status-page.postgres.port" . | quote }}
   POSTGRES_DB: {{ include "status-page.postgres.database" . | quote }}

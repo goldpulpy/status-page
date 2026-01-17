@@ -18,6 +18,7 @@ config:
   organizationName: "OrgName" # Your organization name
   host: "0.0.0.0"
   port: 5000
+  https: false
   adminPath: "/admin"
   jwt:
     issuer: "StatusPage"
@@ -25,7 +26,6 @@ config:
     algorithm: "HS256"
   cookie:
     key: "token"
-    httpOnly: true
 
 # ============================================
 #           Secrets Configuration
@@ -38,7 +38,6 @@ secrets:
   # These should be overridden via --set or values-{env}.yaml
   adminUsername: ""
   adminPassword: ""
-  jwtSecret: "" # Min 32 chars, use: openssl rand -base64 32
 
   # Annotations for secret
   annotations: {}
