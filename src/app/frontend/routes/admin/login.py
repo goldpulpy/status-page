@@ -25,6 +25,7 @@ async def login_page(
         {
             "request": request,
             "admin_path": config.admin.safe_path,
+            "theme": config.app.theme.value,
             "organization_name": config.app.organization_name,
         },
     )

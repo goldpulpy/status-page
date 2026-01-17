@@ -25,6 +25,14 @@ class LogLevel(str, Enum):
     CRITICAL = "CRITICAL"
 
 
+class Theme(str, Enum):
+    """Theme enum."""
+
+    DEFAULT = "default"
+    MODERN = "modern"
+    DARK = "dark"
+
+
 class BaseConfig(BaseSettings):
     """Base config class."""
 
@@ -40,10 +48,10 @@ class APPConfig(BaseConfig):
     log_level: LogLevel = LogLevel.INFO
 
     organization_name: str = "OrgName"
+    theme: Theme = Theme.DEFAULT
 
     https: bool = False
 
-    theme: str = "default"
 
     @property
     def is_production(self) -> bool:

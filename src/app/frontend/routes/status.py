@@ -24,7 +24,7 @@ async def status_page(
         "status/index.html",
         {
             "request": request,
-            "theme": config.app.theme,
+            "theme": config.app.theme.value,
             "organization_name": config.app.organization_name,
         },
     )
