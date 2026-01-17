@@ -16,7 +16,7 @@ class ContextMiddleware:
         """Initialize context middleware."""
         self.app = app
         self._org_name = config.app.organization_name
-        self._theme = config.app.theme
+        self._theme = config.app.theme.value
         self._safe_path = config.admin.safe_path
         self._admin_prefix = f"/{self._safe_path}"
 

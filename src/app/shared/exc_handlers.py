@@ -11,7 +11,6 @@ from fastapi.responses import HTMLResponse, JSONResponse
 from slowapi.errors import RateLimitExceeded
 
 from app.container import Container
-from app.shared import config
 
 if TYPE_CHECKING:
     from fastapi.templating import Jinja2Templates
@@ -29,11 +28,7 @@ async def not_found_handler(
     if not path.startswith("/api"):
         return jinja.TemplateResponse(
             "404.html",
-            {
-                "request": request,
-                "organization_name": config.app.organization_name,
-                "path": request.url.path,
-            },
+            {"request": request},
             status_code=status.HTTP_404_NOT_FOUND,
         )
 

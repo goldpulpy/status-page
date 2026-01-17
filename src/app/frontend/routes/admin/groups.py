@@ -21,8 +21,5 @@ async def groups_page(
     """Get groups page."""
     return jinja.TemplateResponse(
         "admin/groups/index.html",
-        {
-            "request": request,
-            "current_page": "groups",
-        },
+        {"request": request, "current_page": "groups"},
     )

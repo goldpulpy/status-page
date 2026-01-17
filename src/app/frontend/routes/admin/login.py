@@ -19,9 +19,4 @@ async def login_page(
     jinja: Annotated[Jinja2Templates, Depends(Provide[Container.jinja])],
 ) -> HTMLResponse:
     """Get login page."""
-    return jinja.TemplateResponse(
-        "admin/login.html",
-        {
-            "request": request,
-        },
-    )
+    return jinja.TemplateResponse("admin/login.html", {"request": request})
