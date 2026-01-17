@@ -40,7 +40,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="theme-color" content="#0d1117" />
 
-    <script defer src="{{ url_for('static', path='main.min.js') }}"></script>
+    <script
+      defer
+      nonce="{{ request.state.csp_nonce }}"
+      src="{{ url_for('static', path='main.min.js') }}"
+    ></script>
 
     <title>{{ organization_name }} Status</title>
   </head>

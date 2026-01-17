@@ -15,7 +15,6 @@ from app import api, frontend, shared
 from app.api import docs
 from app.container import Container
 from app.shared import config
-from app.shared.constants import SECURE_HEADERS
 from app.shared.exc_handlers import (
     not_found_handler,
     rate_limit_exception_handler,
@@ -59,6 +58,7 @@ app = FastAPI(
     openapi_url=None if config.app.is_production else "/openapi.json",
 )
 
+
 app.mount(
     "/static",
     StaticFiles(directory=Path(__file__).parent / "frontend" / "static"),
@@ -70,6 +70,7 @@ app.add_exception_handler(RateLimitExceeded, rate_limit_exception_handler)
 
 app.add_middleware(api.middlewares.APIAuthMiddleware)
 app.add_middleware(frontend.middlewares.SSRAuthMiddleware)
+app.add_middleware(frontend.middlewares.CSPNonceMiddleware)
 app.add_middleware(frontend.middlewares.HTMLMinifyMiddleware)
 
 app.include_router(api.router)
@@ -99,6 +100,5 @@ if __name__ == "__main__":
         limit_concurrency=1000,
         timeout_keep_alive=5,
         timeout_graceful_shutdown=10,
-        headers=SECURE_HEADERS if config.app.is_production else None,
-        server_header=False if config.app.is_production else True,
+        server_header=not config.app.is_production,
     )
