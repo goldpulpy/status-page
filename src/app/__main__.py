@@ -24,7 +24,6 @@ from app.shared.log_filters import HealthCheckFilter
 logging.getLogger("uvicorn.access").addFilter(HealthCheckFilter())
 logging.getLogger("httpx").setLevel(logging.ERROR)
 logging.getLogger("httpcore").setLevel(logging.ERROR)
-logging.getLogger("aiosqlite").setLevel(logging.ERROR)
 
 logging.basicConfig(
     level=config.app.log_level.value,
