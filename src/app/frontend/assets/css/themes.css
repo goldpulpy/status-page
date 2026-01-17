@@ -86,6 +86,8 @@
   --color-major: #f55c5c;
 }
 
+/* ========== Dark ========== */
+
 [data-theme="dark"] {
   /* Backgrounds */
   --color-background: #18181b;
