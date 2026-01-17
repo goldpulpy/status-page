@@ -16,7 +16,7 @@ def _build_csp_policy(nonce: str) -> str:
     """Build CSP policy string."""
     directives = [
         "default-src 'self'",
-        f"script-src 'self' 'nonce-{nonce}' 'unsafe-eval'",
+        f"script-src 'self' 'nonce-{nonce}' 'unsafe-eval'",  # unsafe-eval: Alpine.js requirement # noqa: E501
         "style-src 'self' 'unsafe-inline'",
         "img-src 'self' data: https:",
         "font-src 'self'",
