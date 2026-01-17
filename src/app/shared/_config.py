@@ -1,36 +1,12 @@
 """Config module."""
 
 import secrets
-from enum import Enum
 from typing import ClassVar
 
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-
-class Environment(str, Enum):
-    """Environment enum."""
-
-    DEVELOPMENT = "development"
-    PRODUCTION = "production"
-
-
-class LogLevel(str, Enum):
-    """LogLevel enum."""
-
-    DEBUG = "DEBUG"
-    INFO = "INFO"
-    WARNING = "WARNING"
-    ERROR = "ERROR"
-    CRITICAL = "CRITICAL"
-
-
-class Theme(str, Enum):
-    """Theme enum."""
-
-    DEFAULT = "default"
-    MODERN = "modern"
-    DARK = "dark"
+from app.enums import Environment, LogLevel, Theme
 
 
 class BaseConfig(BaseSettings):

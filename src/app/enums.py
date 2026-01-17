@@ -3,6 +3,31 @@
 from enum import Enum
 
 
+class Environment(str, Enum):
+    """Environment enum."""
+
+    DEVELOPMENT = "development"
+    PRODUCTION = "production"
+
+
+class LogLevel(str, Enum):
+    """LogLevel enum."""
+
+    DEBUG = "DEBUG"
+    INFO = "INFO"
+    WARNING = "WARNING"
+    ERROR = "ERROR"
+    CRITICAL = "CRITICAL"
+
+
+class Theme(str, Enum):
+    """Theme enum."""
+
+    DEFAULT = "default"
+    MODERN = "modern"
+    DARK = "dark"
+
+
 class ComponentType(str, Enum):
     """Component types."""
 
