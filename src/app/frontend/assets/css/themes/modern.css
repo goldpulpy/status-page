@@ -1,0 +1,39 @@
+[data-theme="modern"] {
+  /* Backgrounds */
+  --color-background: #f9fafb;
+  --color-subform: #f9fafb;
+
+  /* Button primary */
+  --color-button-bg-primary: #fafaf9;
+  --color-button-hover-primary: #d5d4d3;
+  --color-button-text-primary: #1c1917;
+
+  /* Borders */
+  --color-form-border: #e5e7eb;
+  --color-input-border: #e7e5e4;
+  --color-button-border: #e7e5e4;
+
+  /* Radius */
+  --radius-form: 0.375rem;
+  --radius-input: 0.375rem;
+  --radius-button: 0.375rem;
+
+  /* Shadow */
+  --shadow-form: 0 4px 6px -1px #0000001a, 0 2px 4px -2px #0000001a;
+
+  /* Typography */
+  --color-title: #000000;
+  --color-subtitle: #1e2939;
+  --color-primary: #000000;
+  --color-tooltip: #364153;
+
+  /* Icons */
+  --color-icon: #101828;
+
+  /* Status */
+  --color-empty: #f7f7f8;
+  --color-operational: #24c19a;
+  --color-degraded: #fbbf24;
+  --color-partial: #f5785c;
+  --color-major: #f55c5c;
+}

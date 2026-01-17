@@ -15,10 +15,26 @@
   --color-background: var(--color-background);
   --color-form: var(--color-form);
   --color-subform: var(--color-subform);
+
+  /* Button primary */
   --color-button-bg-primary: var(--color-button-bg-primary);
-  --color-button-bg-blue: var(--color-button-bg-blue);
+  --color-button-hover-primary: var(--color-button-hover-primary);
+  --color-button-text-primary: var(--color-button-text-primary);
+
+  /* Button red */
   --color-button-bg-red: var(--color-button-bg-red);
+  --color-button-hover-red: var(--color-button-hover-red);
+  --color-button-text-red: var(--color-button-text-red);
+
+  /* Button blue */
+  --color-button-bg-blue: var(--color-button-bg-blue);
+  --color-button-hover-blue: var(--color-button-hover-blue);
+  --color-button-text-blue: var(--color-button-text-blue);
+
+  /* Button yellow */
   --color-button-bg-yellow: var(--color-button-bg-yellow);
+  --color-button-hover-yellow: var(--color-button-hover-yellow);
+  --color-button-text-yellow: var(--color-button-text-yellow);
 
   /* Borders */
   --color-form-border: var(--color-form-border);
@@ -27,16 +43,15 @@
 
   /* Interactive */
   --color-input-ring: var(--color-input-ring);
-  --color-button-primary-hover: var(--color-button-primary-hover);
-  --color-button-red-hover: var(--color-button-hover);
-  --color-button-blue-hover: var(--color-button-hover);
-  --color-button-yellow-hover: var(--color-button-hover);
 
   /* Typography */
   --color-title: var(--color-title);
   --color-subtitle: var(--color-subtitle);
   --color-primary: var(--color-primary);
   --color-tooltip: var(--color-tooltip);
+
+  /* Status */
+  --shadow-form: var(--shadow-form);
 
   /* Icons */
   --color-icon: var(--color-icon);
@@ -56,24 +71,6 @@
   --radius-legend: var(--radius-legend);
 
   --font-family-sans: var(--font-family-inter);
-}
-
-@layer components {
-  .button-primary-color {
-    @apply bg-button-bg-primary text-primary hover:bg-button-primary-hover;
-  }
-
-  .button-red-color {
-    @apply bg-button-bg-red text-primary hover:bg-button-red-hover;
-  }
-
-  .button-blue-color {
-    @apply bg-button-bg-blue text-primary hover:bg-button-blue-hover;
-  }
-
-  .button-yellow-color {
-    @apply bg-button-bg-yellow text-primary hover:bg-button-yellow-hover;
-  }
 }
 
 [x-cloak] {

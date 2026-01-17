@@ -3,7 +3,7 @@
 {% macro render(x_items="items") %}
   <template x-for="item in {{ x_items }}" :key="item.id">
     <div
-      class="bg-form border border-form-border rounded-form p-4 sm:p-6 md:p-8 mb-6"
+      class="bg-form border border-form-border rounded-form shadow-form p-4 sm:p-6 md:p-8 mb-6"
     >
       <template x-if="item.type === 'group'">
         <div>
