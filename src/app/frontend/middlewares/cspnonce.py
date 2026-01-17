@@ -9,6 +9,7 @@ from starlette.requests import Request
 from starlette.responses import Response
 
 from app.shared.headers import get_secure_headers
+from app.shared import config
 
 logger = logging.getLogger(__name__)
 
@@ -24,14 +25,14 @@ class CSPNonceMiddleware(BaseHTTPMiddleware):
         call_next: Callable[[Request], Awaitable[Response]],
     ) -> Response:
         """Dispatch middleware."""
+        
+        if config.app.is_development:
+            return await call_next(request)
+
         nonce = secrets.token_urlsafe(self.NONCE_LENGTH)
         request.state.csp_nonce = nonce
 
-        try:
-            response = await call_next(request)
-        except Exception:
-            logger.exception("Error in request processing")
-            raise
+        response = await call_next(request)
 
         content_type = response.headers.get("content-type", "").lower()
         if content_type.startswith("text/html"):
