@@ -25,6 +25,7 @@ async def groups_page(
         {
             "request": request,
             "admin_path": config.admin.safe_path,
+            "theme": config.app.theme.value,
             "current_page": "groups",
             "organization_name": config.app.organization_name,
         },

@@ -15,10 +15,10 @@
 %}
   {%
     set variants = {
-      'blue': 'bg-blue-500 text-white hover:bg-blue-600',
-      'yellow': 'bg-yellow-500 text-white hover:bg-yellow-600',
-      'red': 'bg-red-500 text-white hover:bg-red-600',
-      'primary': 'button-primary-color',
+      'blue': 'bg-button-bg-blue text-button-text-blue hover:bg-button-hover-blue',
+      'yellow': 'bg-button-bg-yellow text-button-text-yellow hover:bg-button-hover-yellow',
+      'red': 'bg-button-bg-red text-button-text-red hover:bg-button-hover-red',
+      'primary': 'bg-button-bg-primary text-button-text-primary hover:bg-button-hover-primary',
     }
   %}
 
@@ -27,7 +27,7 @@
     {% if callback %}@click="{{ callback }}"{% endif %}
     {% if x_bind_disabled %}:disabled="{{ x_bind_disabled }}"{% endif %}
     class="cursor-pointer {% if w_full %}w-full{% endif %}
-          py-2.5 px-4 text-sm font-medium
+          py-2.5 px-4 text-sm font-medium rounded-button
           {{ variants[variant] }} transition
           flex items-center justify-center gap-2
           disabled:opacity-50 disabled:cursor-not-allowed

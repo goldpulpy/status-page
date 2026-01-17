@@ -1,0 +1,40 @@
+[data-theme="dark"] {
+  /* Backgrounds */
+  --color-background: #18181b;
+  --color-form: #27272a;
+  --color-subform: #1f1f23;
+
+  /* Button primary */
+  --color-button-bg-primary: #18181b;
+  --color-button-hover-primary: #1d1d20;
+  --color-button-text-primary: #fafafa;
+
+  /* Borders */
+  --color-form-border: #3f3f46;
+  --color-input-border: #52525b;
+  --color-button-border: #3f3f46;
+
+  /* Radius */
+  --radius-form: 0.375rem;
+  --radius-input: 0.375rem;
+  --radius-button: 0.375rem;
+
+  /* Interactive */
+  --color-input-ring: #fafafa;
+
+  /* Typography */
+  --color-title: #f4f4f5;
+  --color-subtitle: #d4d4d8;
+  --color-primary: #fafafa;
+  --color-tooltip: #a1a1aa;
+
+  /* Icons */
+  --color-icon-primary: #fafafa;
+
+  /* Status */
+  --color-empty: #52525b;
+  --color-operational: #4ade80;
+  --color-degraded: #facc15;
+  --color-partial: #fb923c;
+  --color-major: #f87171;
+}

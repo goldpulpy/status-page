@@ -24,7 +24,6 @@ from app.shared.log_filters import HealthCheckFilter
 logging.getLogger("uvicorn.access").addFilter(HealthCheckFilter())
 logging.getLogger("httpx").setLevel(logging.ERROR)
 logging.getLogger("httpcore").setLevel(logging.ERROR)
-logging.getLogger("aiosqlite").setLevel(logging.ERROR)
 
 logging.basicConfig(
     level=config.app.log_level.value,
@@ -68,10 +67,8 @@ app.mount(
 app.add_exception_handler(status.HTTP_404_NOT_FOUND, not_found_handler)
 app.add_exception_handler(RateLimitExceeded, rate_limit_exception_handler)
 
-app.add_middleware(api.middlewares.APIAuthMiddleware)
-app.add_middleware(frontend.middlewares.SSRAuthMiddleware)
-app.add_middleware(frontend.middlewares.CSPNonceMiddleware)
-app.add_middleware(frontend.middlewares.HTMLMinifyMiddleware)
+api.middlewares.setup_middlewares(app)
+frontend.middlewares.setup_middlewares(app)
 
 app.include_router(api.router)
 app.include_router(api.health.router)

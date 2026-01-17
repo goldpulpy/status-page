@@ -16,6 +16,7 @@ config:
   logLevel: INFO # DEBUG | INFO | WARNING | ERROR | CRITICAL
   environment: production # development | staging | production
   organizationName: "OrgName" # Your organization name
+  theme: "default" # default | modern | dark
   host: "0.0.0.0"
   port: 5000
   https: false
