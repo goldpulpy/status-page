@@ -64,6 +64,7 @@ class WorkerScheduler:
             try:
                 worker = self._create_worker(monitor)
                 workers.append(worker)
+
             except Exception:
                 logger.exception(
                     "Failed to create worker from monitor ID=%s",
@@ -105,11 +106,13 @@ class WorkerScheduler:
         """Restart worker."""
         try:
             await self.stop_worker(monitor)
+
         except Exception:
             logger.exception(
                 "Failed to stop worker ID=%s, starting anyway",
                 monitor.id,
             )
+
         finally:
             await self.start_worker(monitor)
 
@@ -134,13 +137,16 @@ class WorkerScheduler:
     def _map_worker_type(self, monitor_type: MonitorType) -> type[BaseWorker]:
         """Map monitor type to worker type."""
         worker_type = self._WORKER_TYPE_MAP.get(monitor_type)
+
         if worker_type is None:
             msg = f"Unsupported monitor type: {monitor_type}"
             raise UnsupportedMonitorTypeError(msg)
+
         return worker_type
 
     def _create_worker(self, monitor: MonitorModel) -> BaseWorker:
         """Create worker from monitor model."""
         worker_type = self._map_worker_type(monitor.type)
         config = self._map_config(monitor)
+
         return worker_type(config, self._uow_factory)

@@ -39,7 +39,7 @@ def get_secure_headers(nonce: str) -> list[tuple[str, str]]:
     """Get secure headers with CSP nonce."""
     https = config.app.https
     headers = list(STATIC_SECURITY_HEADERS)
-    
+
     headers.append(
         ("Content-Security-Policy", _build_csp_policy(nonce, https=https)),
     )

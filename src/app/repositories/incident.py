@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import logging
 from datetime import UTC, datetime, timedelta
 from typing import TYPE_CHECKING
 
@@ -15,8 +14,6 @@ if TYPE_CHECKING:
     from uuid import UUID
 
     from sqlalchemy.ext.asyncio import AsyncSession
-
-logger = logging.getLogger(__name__)
 
 
 class IncidentRepository:
@@ -44,13 +41,13 @@ class IncidentRepository:
     async def find_all(
         self,
         *,
-        days: int | None = None,
+        last_days: int | None = None,
     ) -> list[IncidentModel]:
         """Find all incidents."""
         stmt = select(IncidentModel).order_by(desc(IncidentModel.created_at))
 
-        if days:
-            cutoff = datetime.now(UTC) - timedelta(days=days)
+        if last_days:
+            cutoff = datetime.now(UTC) - timedelta(days=last_days)
             stmt = stmt.where(IncidentModel.created_at > cutoff)
 
         result = await self._session.execute(stmt)

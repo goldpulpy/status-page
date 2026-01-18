@@ -1,1 +1,1 @@
-"""Core module."""
+"""Monitoring module."""

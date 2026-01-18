@@ -99,7 +99,7 @@ async def get_status(
         monitors = await uow.monitors.find_all()
         groups = await uow.groups.find_all()
         incidents = await uow.incidents.find_all(
-            days=INCIDENT_HISTORY_DAYS,
+            last_days=INCIDENT_HISTORY_DAYS,
         )
 
     logger.debug(
