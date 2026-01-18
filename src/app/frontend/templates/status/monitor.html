@@ -18,7 +18,7 @@
           </div>
         </div>
       </template>
-      <template x-if="item.type !== 'group'">
+      <template x-if="item.type === 'monitor'">
         {{ monitor(x_item="item") }}
       </template>
     </div>

@@ -1,7 +1,7 @@
 [project]
 name = "status-page"
-version = "0.1.0"
-description = "Simple infrastructure status page"
+version = "1.0.0"
+description = "Simple Monitoring Platform for your infrastructure"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [

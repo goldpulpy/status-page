@@ -45,13 +45,13 @@ class Container(containers.DeclarativeContainer):
 
     db = providers.Container(DatabaseContainer)
 
-    uow_factory = providers.Factory(
-        SqlAlchemyUnitOfWork,
+    database_health = providers.Factory(
+        DatabaseHealthCheckService,
         session_factory=db.session_factory,
     )
 
-    database_health = providers.Factory(
-        DatabaseHealthCheckService,
+    uow_factory = providers.Factory(
+        SqlAlchemyUnitOfWork,
         session_factory=db.session_factory,
     )
 
@@ -65,8 +65,8 @@ class Container(containers.DeclarativeContainer):
         key_func=rate_limit_func,
     )
 
+    # Monitoring
     worker_manager = providers.Singleton(WorkerManager)
-
     worker_scheduler = providers.Singleton(
         WorkerScheduler,
         manager=worker_manager,

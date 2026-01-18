@@ -93,6 +93,7 @@ class BaseWorker(ABC):
             if not is_same_incident:
                 await self._resolve_incident(uow, open_incident)
                 incident_model = self._build_incident_model(incident, None)
+
             else:
                 incident_model = self._build_incident_model(
                     incident,
@@ -126,6 +127,7 @@ class BaseWorker(ABC):
 
             self._stop_event.clear()
             self._task = asyncio.create_task(self._run())
+
             logger.debug("Worker ID=%s started", self._config.id)
 
     async def stop(self, stop_timeout: float | None = None) -> None:
@@ -141,6 +143,7 @@ class BaseWorker(ABC):
             if self._task is not None:
                 try:
                     await asyncio.wait_for(self._task, timeout=stop_timeout)
+
                 except TimeoutError:
                     logger.warning(
                         "Worker ID=%s did not stop in time, cancelling",
@@ -201,4 +204,5 @@ class BaseWorker(ABC):
         """Change incident status to resolved."""
         open_incident.status = IncidentStatus.RESOLVED
         open_incident.ended_at = datetime.now(UTC)
+
         await uow.incidents.save(open_incident)

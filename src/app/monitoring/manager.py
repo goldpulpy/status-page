@@ -44,6 +44,7 @@ class WorkerManager:
 
                 try:
                     await worker.stop()
+
                 except Exception:
                     logger.exception(
                         "Failed to stop worker during cleanup: %s",
@@ -62,6 +63,7 @@ class WorkerManager:
         if worker:
             try:
                 await worker.stop()
+
             except Exception:
                 logger.exception("Failed to stop worker %s", worker.config.id)
                 raise
@@ -84,6 +86,7 @@ class WorkerManager:
                 ),
                 timeout=stop_timeout,
             )
+
         except TimeoutError:
             logger.exception(
                 "Shutdown timeout exceeded, some workers may not have stopped",

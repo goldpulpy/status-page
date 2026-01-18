@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import logging
 from datetime import UTC, datetime, timedelta
 
 from jwt import (
@@ -11,8 +10,6 @@ from jwt import (
 )
 
 from app.shared import config
-
-logger = logging.getLogger(__name__)
 
 
 def create_auth_token(sub: str) -> tuple[str, datetime, datetime]:

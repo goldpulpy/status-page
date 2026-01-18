@@ -26,6 +26,7 @@ INCIDENT_HISTORY_DAYS = 30
 
 
 def _group_by_attribute(items: list, attr_name: str) -> dict:
+    """Group items by attribute."""
     result = defaultdict(list)
     for item in items:
         result[getattr(item, attr_name)].append(item)
@@ -69,6 +70,7 @@ def _build_components(
         )
         for monitor in orphan_monitors
     ]
+
     return components
 
 
@@ -99,7 +101,7 @@ async def get_status(
         monitors = await uow.monitors.find_all()
         groups = await uow.groups.find_all()
         incidents = await uow.incidents.find_all(
-            days=INCIDENT_HISTORY_DAYS,
+            last_days=INCIDENT_HISTORY_DAYS,
         )
 
     logger.debug(

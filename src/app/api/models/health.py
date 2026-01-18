@@ -1,10 +1,10 @@
 """Health check models."""
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 class HealthCheckResponse(BaseModel):
     """Health check response."""
 
-    status: str = Field(..., description="Service status")
-    timestamp: int = Field(..., description="Timestamp")
+    status: str
+    timestamp: int

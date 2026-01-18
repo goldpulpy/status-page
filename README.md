@@ -41,7 +41,7 @@ Status Page is a lightweight, self-hosted monitoring platform designed to provid
 
 - **User-Friendly Interface** - Easy setup and configuration
 - **Real-time Monitoring** - Instant updates on service availability
-- **Easy Deployment** - Docker support with comprehensive configuration options
+- **Easy Deployment** - Docker/Kubernetes support with comprehensive configuration options
 - **Flexible Monitoring** - HTTP endpoint checks with customizable validation rules
 
 ## Features
@@ -52,7 +52,7 @@ Status Page is a lightweight, self-hosted monitoring platform designed to provid
 - [x] **Status Validation** - Verify response codes, content patterns, and latency thresholds
 - [x] **Service Grouping** - Organize monitors into logical groups for better visibility
 - [ ] **Notifications** - Notify when incidents occur
-- [x] **Theme Presets** - Ready-to-use color schemes and themes
+- [x] **Theme Presets** - Ready-to-use color schemes (`default`, `modern`, `dark`)
 
 ### Technologies
 
@@ -119,8 +119,7 @@ docker compose ps
 
 <summary>Option 3: Helm Chart (for Kubernetes)</summary>
 
-> [!WARNING]
-> Important: Review [values.yaml](helm/values.yaml)
+- ⚠️ Review [values.yaml](helm/values.yaml)
 
 ```bash
 # Download values.yaml or use --set
@@ -247,6 +246,28 @@ make rollback-migration
 
 </details>
 
+<details>
+
+<summary>Pre-commit Hooks</summary>
+
+To install the pre-commit hooks:
+
+**Note:** You need to have the virtual environment activated.
+
+```bash
+pre-commit install
+```
+
+After installation, the hooks will automatically run on every commit. If any issues are found, the commit will be blocked until they're fixed.
+
+You can manually run all pre-commit hooks on all files with:
+
+```bash
+pre-commit run --all-files
+```
+
+</details>
+
 ## API Documentation
 
 Interactive API documentation is available in development mode:
@@ -266,8 +287,6 @@ We welcome contributions! Please follow these steps:
 4. **Run** quality checks (`make format lint type-check`)
 5. **Push** to your branch (`git push origin feature/amazing-feature`)
 6. **Open** a Pull Request
-
-Please ensure all tests pass and code quality checks succeed before submitting.
 
 ## License
 
