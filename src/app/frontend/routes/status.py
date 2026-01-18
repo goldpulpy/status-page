@@ -8,7 +8,6 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
 from app.container import Container
-from app.shared import config
 
 router = APIRouter()
 
@@ -22,9 +21,5 @@ async def status_page(
     """Status page."""
     return jinja.TemplateResponse(
         "status/index.html",
-        {
-            "request": request,
-            "theme": config.app.theme.value,
-            "organization_name": config.app.organization_name,
-        },
+        {"request": request},
     )

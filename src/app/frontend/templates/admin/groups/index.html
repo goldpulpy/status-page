@@ -5,7 +5,7 @@
   {% include "admin/header.html" %}
 
   <main
-    x-data="groups('{{ admin_path }}')"
+    x-data="groups('{{ request.state.admin_path }}')"
     x-init="fetch()"
     class="container mx-auto px-6 pt-12 max-w-4xl mx-auto"
   >

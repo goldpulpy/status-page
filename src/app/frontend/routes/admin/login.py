@@ -8,7 +8,6 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
 from app.container import Container
-from app.shared import config
 
 router = APIRouter()
 
@@ -20,12 +19,4 @@ async def login_page(
     jinja: Annotated[Jinja2Templates, Depends(Provide[Container.jinja])],
 ) -> HTMLResponse:
     """Get login page."""
-    return jinja.TemplateResponse(
-        "admin/login.html",
-        {
-            "request": request,
-            "admin_path": config.admin.safe_path,
-            "theme": config.app.theme.value,
-            "organization_name": config.app.organization_name,
-        },
-    )
+    return jinja.TemplateResponse("admin/login.html", {"request": request})

@@ -5,7 +5,9 @@
         class="cursor-pointer flex transition-all duration-300 transform hover:-translate-y-0.5"
         href="/"
       >
-        <h1 class="text-3xl font-bold text-title">{{ organization_name }}</h1>
+        <h1 class="text-3xl font-bold text-title">
+          {{ request.state.organization_name }}
+        </h1>
       </a>
     </div>
     {% block nav %}{% endblock %}

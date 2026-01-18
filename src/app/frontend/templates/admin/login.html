@@ -5,13 +5,13 @@
 
 {% block content %}
   <main
-    x-data="login('{{ admin_path }}')"
+    x-data="login('{{ request.state.admin_path }}')"
     @submit.prevent="submitForm()"
     class="flex flex-col items-center justify-start sm:justify-center px-4 py-10 sm:py-30"
   >
     <a class="cursor-pointer mx-auto mb-6 sm:mb-8" href="/">
       <h1 class="text-2xl sm:text-3xl font-bold text-title">
-        {{ organization_name }}
+        {{ request.state.organization_name }}
       </h1>
     </a>
 

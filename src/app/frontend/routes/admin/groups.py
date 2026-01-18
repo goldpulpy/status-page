@@ -8,7 +8,6 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
 from app.container import Container
-from app.shared import config
 
 router = APIRouter()
 
@@ -22,11 +21,5 @@ async def groups_page(
     """Get groups page."""
     return jinja.TemplateResponse(
         "admin/groups/index.html",
-        {
-            "request": request,
-            "admin_path": config.admin.safe_path,
-            "theme": config.app.theme.value,
-            "current_page": "groups",
-            "organization_name": config.app.organization_name,
-        },
+        {"request": request, "current_page": "groups"},
     )
