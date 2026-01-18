@@ -1,6 +1,5 @@
 """CSP nonce middleware."""
 
-import logging
 import secrets
 from collections.abc import Awaitable, Callable
 from typing import ClassVar
@@ -11,8 +10,6 @@ from starlette.responses import Response
 
 from app.shared import config
 from app.shared.headers import get_secure_headers
-
-logger = logging.getLogger(__name__)
 
 
 class CSPNonceMiddleware(BaseHTTPMiddleware):
