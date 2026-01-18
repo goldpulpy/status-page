@@ -36,5 +36,5 @@ export type StatusComponent = GroupForStatus | MonitorForStatus;
 
 export interface StatusComponents {
   components: StatusComponent[];
-  last_updated: string;
+  last_update_at: string;
 }

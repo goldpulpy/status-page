@@ -1,7 +1,8 @@
 {% extends "header.html" %}
 
 {% block nav %}
-  <p class="text-primary text-primary">
-    Last update: <span x-text="lastUpdate"></span>
+  <p class="hidden text-subtitle min-[375px]:block">
+    Last update at
+    <span class="text-primary font-semibold" x-text="lastUpdateAt"></span>
   </p>
 {% endblock %}
