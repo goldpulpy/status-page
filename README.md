@@ -119,8 +119,7 @@ docker compose ps
 
 <summary>Option 3: Helm Chart (for Kubernetes)</summary>
 
-> [!WARNING]
-> Important: Review [values.yaml](helm/values.yaml)
+- ⚠️ Review [values.yaml](helm/values.yaml)
 
 ```bash
 # Download values.yaml or use --set
