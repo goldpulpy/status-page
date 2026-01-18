@@ -41,7 +41,7 @@ Status Page is a lightweight, self-hosted monitoring platform designed to provid
 
 - **User-Friendly Interface** - Easy setup and configuration
 - **Real-time Monitoring** - Instant updates on service availability
-- **Easy Deployment** - Docker support with comprehensive configuration options
+- **Easy Deployment** - Docker/Kubernetes support with comprehensive configuration options
 - **Flexible Monitoring** - HTTP endpoint checks with customizable validation rules
 
 ## Features
