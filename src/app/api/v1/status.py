@@ -26,6 +26,7 @@ INCIDENT_HISTORY_DAYS = 30
 
 
 def _group_by_attribute(items: list, attr_name: str) -> dict:
+    """Group items by attribute."""
     result = defaultdict(list)
     for item in items:
         result[getattr(item, attr_name)].append(item)
@@ -69,6 +70,7 @@ def _build_components(
         )
         for monitor in orphan_monitors
     ]
+
     return components
 
 

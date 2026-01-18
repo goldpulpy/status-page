@@ -29,6 +29,7 @@ class SSRAuthMiddleware(BaseAuthMiddleware):
     }
 
     def _should_authenticate(self, path: str) -> bool:
+        """Check if path requires authentication."""
         if any(path.startswith(p) for p in self.AUTH_EXCLUDE_PATHS):
             return False
 

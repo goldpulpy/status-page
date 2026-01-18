@@ -6,7 +6,7 @@ from scalar_fastapi import get_scalar_api_reference
 
 
 def setup_scalar(app: FastAPI) -> None:
-    """Set up documentation for the app."""
+    """Set up scalar for the app."""
 
     @app.get("/docs", include_in_schema=False)
     async def api_documentation() -> HTMLResponse:

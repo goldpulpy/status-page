@@ -16,6 +16,7 @@ def normalize_ip(ip_str: str) -> str | None:
     """Normalize IP address."""
     try:
         addr = ipaddress.ip_address(ip_str.strip())
+
     except ValueError:
         return None
 
