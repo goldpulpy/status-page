@@ -20,6 +20,12 @@ repos:
         name: ruff check
         files: ^src/
 
+  - repo: https://github.com/pre-commit/mirrors-eslint
+    rev: v10.0.0-rc.0
+    hooks:
+      - id: eslint
+        files: \.[jt]sx?$
+
   - repo: https://github.com/PyCQA/bandit
     rev: 1.9.2
     hooks:
