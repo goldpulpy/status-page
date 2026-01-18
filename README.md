@@ -246,6 +246,28 @@ make rollback-migration
 
 </details>
 
+<details>
+
+<summary>Pre-commit Hooks</summary>
+
+To install the pre-commit hooks:
+
+**Note:** You need to have the virtual environment activated.
+
+```bash
+pre-commit install
+```
+
+After installation, the hooks will automatically run on every commit. If any issues are found, the commit will be blocked until they're fixed.
+
+You can manually run all pre-commit hooks on all files with:
+
+```bash
+pre-commit run --all-files
+```
+
+</details>
+
 ## API Documentation
 
 Interactive API documentation is available in development mode:
