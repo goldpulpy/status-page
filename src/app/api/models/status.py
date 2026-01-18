@@ -73,4 +73,4 @@ class StatusResponse(BaseModel):
     """Overall status response."""
 
     components: list[StatusMonitorResponse | StatusMonitorGroupResponse]
-    last_updated: datetime = Field(default_factory=datetime.now)
+    last_update_at: datetime = Field(default_factory=datetime.now)
