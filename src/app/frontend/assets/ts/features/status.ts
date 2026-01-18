@@ -21,6 +21,7 @@ export class StatusService {
   };
   public components: EnrichedStatusComponent[] = [];
   public incidents: EnrichedIncident[] = [];
+  public lastUpdate: string | null = null;
   public currentIncident: EnrichedIncident | typeof OPERATIONAL_STATUS | null =
     null;
 
@@ -30,7 +31,10 @@ export class StatusService {
   }
 
   public async refresh(): Promise<void> {
-    const components = await this.api.getStatus();
+    const { components, last_updated } = await this.api.getStatus();
+
+    this.lastUpdate = new Date(last_updated).toLocaleTimeString("en-US");
+
     const incidentsMap =
       this.statusProcessor.buildEnrichedIncidents(components);
     this.incidents = Array.from(incidentsMap.values()).flat();

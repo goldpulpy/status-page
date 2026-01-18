@@ -32,4 +32,9 @@ export interface GroupForStatus {
   monitors: MonitorForStatus[];
 }
 
-export type StatusComponent = MonitorForStatus | GroupForStatus;
+export type StatusComponent = GroupForStatus | MonitorForStatus;
+
+export interface StatusComponents {
+  components: StatusComponent[];
+  last_updated: string;
+}

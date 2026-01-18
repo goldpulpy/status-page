@@ -1,7 +1,7 @@
 import type {
   GroupForCRUD,
   MonitorForCRUD,
-  StatusComponent,
+  StatusComponents,
 } from "@/shared/types/api";
 import type { MonitorForm } from "@/shared/types/monitor";
 
@@ -80,10 +80,10 @@ export class API {
     };
   }
 
-  async getStatus(): Promise<StatusComponent[]> {
-    return this.request<{ components: StatusComponent[] }>("/status", {
+  async getStatus(): Promise<StatusComponents> {
+    return this.request<StatusComponents>("/status", {
       method: "GET",
-    }).then((response) => response.components);
+    });
   }
 
   async login(username: string, password: string): Promise<void> {
