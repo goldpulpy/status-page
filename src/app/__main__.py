@@ -78,12 +78,7 @@ if config.app.is_development:
     docs.setup_scalar(app)
 
 if __name__ == "__main__":
-    logger.info(
-        "Application starting, environment: %s, log level: %s",
-        config.app.environment.value,
-        config.app.log_level.value,
-    )
-    logger.info(
+    logger.debug(
         "Admin path: http://%s:%s/%s",
         config.app.host,
         config.app.port,

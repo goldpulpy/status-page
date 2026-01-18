@@ -12,7 +12,7 @@ STATIC_SECURITY_HEADERS: Final[list[tuple[str, str]]] = [
 ]
 
 
-def _build_csp_policy(nonce: str) -> str:
+def _build_csp_policy(nonce: str, *, https: bool = False) -> str:
     """Build CSP policy string."""
     directives = [
         "default-src 'self'",
@@ -29,7 +29,7 @@ def _build_csp_policy(nonce: str) -> str:
         "frame-ancestors 'none'",
     ]
 
-    if config.app.https:
+    if https:
         directives.append("upgrade-insecure-requests")
 
     return "; ".join(directives) + ";"
@@ -37,10 +37,14 @@ def _build_csp_policy(nonce: str) -> str:
 
 def get_secure_headers(nonce: str) -> list[tuple[str, str]]:
     """Get secure headers with CSP nonce."""
-    headers = list(STATIC_SECURITY_HEADERS)
-    headers.append(("Content-Security-Policy", _build_csp_policy(nonce)))
+    https = config.app.https
 
-    if config.app.https:
+    headers = list(STATIC_SECURITY_HEADERS)
+    headers.append(
+        ("Content-Security-Policy", _build_csp_policy(nonce, https=https)),
+    )
+
+    if https:
         headers.append(
             (
                 "Strict-Transport-Security",
