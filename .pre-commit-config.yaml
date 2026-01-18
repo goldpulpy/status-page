@@ -25,6 +25,7 @@ repos:
     hooks:
       - id: eslint
         files: \.[jt]sx?$
+        entry: npm run lint
 
   - repo: https://github.com/PyCQA/bandit
     rev: 1.9.2
