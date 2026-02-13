@@ -22,7 +22,8 @@
           type="text",
           name="group-name",
           placeholder="Enter group name",
-          required=true
+          required=true,
+          x_bind_disabled="state.modal.isLoading"
         )
       }}
     </div>
@@ -44,7 +45,7 @@
         callback="submit()",
         type="button",
         variant="blue",
-        x_bind_disabled="!state.form.name?.trim()"
+        x_bind_disabled="!state.form.name?.trim() || state.modal.isLoading"
       )
     }}
   </template>

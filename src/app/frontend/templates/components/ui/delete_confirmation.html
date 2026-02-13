@@ -25,7 +25,8 @@
         icon=icon(name="trash", size="sm", color="white"),
         callback=callback,
         type="button",
-        variant="red"
+        variant="red",
+        x_bind_disabled="state.modal.isLoading"
       )
     }}
   </template>

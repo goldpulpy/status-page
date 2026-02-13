@@ -12,7 +12,8 @@
         x_option_label="option",
         x_option_value="option",
         required=true,
-        empty_option=false
+        empty_option=false,
+        x_bind_disabled="state.modal.isLoading"
       )
     }}
     {{
@@ -22,7 +23,8 @@
         type="text",
         id="monitor-endpoint",
         placeholder="https://example.com/...",
-        required=true
+        required=true,
+        x_bind_disabled="state.modal.isLoading"
       )
     }}
     {{
@@ -30,7 +32,8 @@
         label="Headers",
         x_model="state.form.headers",
         name="monitor-headers",
-        placeholder='{"Authorization": "Bearer token", ...}'
+        placeholder='{"Authorization": "Bearer token", ...}',
+        x_bind_disabled="state.modal.isLoading"
       )
     }}
 
@@ -39,7 +42,8 @@
         label="Request body",
         x_model="state.form.request_body",
         name="monitor-request-body",
-        placeholder='{"key": "value"}'
+        placeholder='{"key": "value"}',
+        x_bind_disabled="state.modal.isLoading"
       )
     }}
     {{
@@ -49,6 +53,7 @@
         type="number",
         name="monitor-expected-response-code",
         placeholder="200",
+        x_bind_disabled="state.modal.isLoading"
       )
     }}
     {{
@@ -58,6 +63,7 @@
         type="number",
         name="monitor-latency-threshold",
         placeholder="1000",
+        x_bind_disabled="state.modal.isLoading"
       )
     }}
     {{
@@ -67,6 +73,7 @@
         type="text",
         name="monitor-expected-content-pattern",
         placeholder="Hello World",
+        x_bind_disabled="state.modal.isLoading"
       )
     }}
 
@@ -75,7 +82,8 @@
         label="Error mapping",
         x_model="state.form.error_mapping",
         name="monitor-error-mapping",
-        placeholder='{"404": "Not Found", "500": "Server Error"}'
+        placeholder='{"404": "Not Found", "500": "Server Error"}',
+        x_bind_disabled="state.modal.isLoading"
       )
     }}
   </div>
