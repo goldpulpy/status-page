@@ -24,7 +24,8 @@
             id="monitor-name",
             name="monitorName",
             placeholder="Enter monitor name",
-            required=true
+            required=true,
+            x_bind_disabled="state.modal.isLoading"
           )
         }}
 
@@ -37,6 +38,7 @@
             x_option_label="option.name",
             x_option_value="option.id",
             placeholder="No group",
+            x_bind_disabled="state.modal.isLoading"
           )
         }}
 
@@ -51,6 +53,7 @@
             x_option_value="option",
             empty_option=false,
             required=true,
+            x_bind_disabled="state.modal.isLoading"
           )
         }}
       </div>
@@ -75,7 +78,7 @@
         callback="submit()",
         type="button",
         variant="blue",
-        x_bind_disabled="!state.form.name?.trim() || !state.form.endpoint?.trim() || !state.form.type?.trim()"
+        x_bind_disabled="!state.form.name?.trim() || !state.form.endpoint?.trim() || !state.form.type?.trim() || state.modal.isLoading"
       )
     }}
   </template>

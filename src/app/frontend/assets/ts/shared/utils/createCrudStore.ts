@@ -59,6 +59,8 @@ export function createCrudStore<TItem, TForm>(config: {
       }
 
       try {
+        this.state.modal.isLoading = true;
+
         switch (action) {
           case "create":
             if (!this.state.form) throw new Error("No form");
@@ -83,6 +85,8 @@ export function createCrudStore<TItem, TForm>(config: {
         this.cancel();
       } catch (error) {
         handleApiError(error);
+      } finally {
+        this.state.modal.isLoading = false;
       }
     },
   };
