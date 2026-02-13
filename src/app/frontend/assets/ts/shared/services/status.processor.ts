@@ -86,6 +86,15 @@ export class StatusProcessor {
     );
   }
 
+  private sortIncidentsByDate(
+    incidents: EnrichedIncident[],
+  ): EnrichedIncident[] {
+    return [...incidents].sort(
+      (a, b) =>
+        new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+    );
+  }
+
   private buildHistoryForMonitors(monitors: MonitorForStatus[]): Days[] {
     const now = new Date();
     const startDate = subDays(now, HISTORY_OFFSET);
@@ -119,7 +128,7 @@ export class StatusProcessor {
       return {
         index: dayIndex,
         color: prioritizedIncidents[0].color,
-        incidents: prioritizedIncidents,
+        incidents: this.sortIncidentsByDate(prioritizedIncidents),
       };
     });
   }
