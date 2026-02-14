@@ -345,7 +345,7 @@ export class StatusProcessor {
     try {
       const date = parseISO(dateString);
       return isNaN(date.getTime()) ? null : date;
-    } catch (error) {
+    } catch {
       return null;
     }
   }
