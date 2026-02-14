@@ -273,11 +273,21 @@ export class StatusProcessor {
     }
 
     const message = this.buildIncidentMessage(monitor, incidentStartDate);
+
+    let isEndedForTooltip = incident.ended_at !== null;
+
+    if (!isEndedForTooltip && dateRange) {
+      const now = this.dateProvider.now();
+      const isToday =
+        startOfDay(now).getTime() === startOfDay(dateRange.start).getTime();
+      isEndedForTooltip = !isToday;
+    }
+
     const tooltip = this.buildTooltip(
       incident.message,
       actualStart,
       actualEnd,
-      incident.ended_at !== null,
+      isEndedForTooltip,
     );
 
     return {
