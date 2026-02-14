@@ -19,22 +19,46 @@ import { BaseIncident, IncidentStatus } from "@/shared/types/incident";
 
 const HISTORY_DAYS = 30;
 const HISTORY_OFFSET = HISTORY_DAYS - 1;
-const MS_PER_DAY = 24 * 60 * 60 * 1000;
+const LOCALE = "en-US" as const;
+
+const DATE_FORMAT_OPTIONS = {
+  date: { month: "long", day: "numeric" } as const,
+  time: { hour: "2-digit", minute: "2-digit" } as const,
+} as const;
+
+type IncidentType = keyof typeof INCIDENT_CONFIG;
+
+interface DateProvider {
+  now(): Date;
+}
+
+class DefaultDateProvider implements DateProvider {
+  now(): Date {
+    return new Date();
+  }
+}
 
 export class StatusProcessor {
+  private dateProvider: DateProvider;
+
+  constructor(dateProvider: DateProvider = new DefaultDateProvider()) {
+    this.dateProvider = dateProvider;
+  }
+
   buildEnrichedIncidents(
     components: StatusComponent[],
   ): Map<string, EnrichedIncident[]> {
-    const enrichedIncidentsByMonitor = new Map();
-    components.forEach((component) => {
-      const monitors = isGroup(component) ? component.monitors : [component];
-      monitors.forEach((monitor) => {
-        const incidents = monitor.incidents.map((incident) =>
-          this.buildIncident(monitor, incident),
-        );
-        enrichedIncidentsByMonitor.set(monitor.id, incidents);
-      });
-    });
+    const enrichedIncidentsByMonitor = new Map<string, EnrichedIncident[]>();
+
+    const monitors = this.flattenMonitors(components);
+
+    for (const monitor of monitors) {
+      const enrichedIncidents = monitor.incidents
+        .map((incident) => this.buildEnrichedIncident(monitor, incident))
+        .filter((incident): incident is EnrichedIncident => incident !== null);
+
+      enrichedIncidentsByMonitor.set(monitor.id, enrichedIncidents);
+    }
 
     return enrichedIncidentsByMonitor;
   }
@@ -45,75 +69,111 @@ export class StatusProcessor {
   ): EnrichedStatusComponent[] {
     return components.map((component) => {
       if (isGroup(component)) {
-        return {
-          ...component,
-          monitors: component.monitors.map((monitor) => ({
-            ...monitor,
-            currentIncident: this.findActiveIncident(
-              enrichedIncidentsByMonitor.get(monitor.id) ?? [],
-            ),
-            history: this.buildHistoryForMonitors([monitor]),
-          })),
-        };
-      } else {
-        return {
-          ...component,
-          currentIncident: this.findActiveIncident(
-            enrichedIncidentsByMonitor.get(component.id) ?? [],
-          ),
-          history: this.buildHistoryForMonitors([component]),
-        };
+        return this.enrichGroupComponent(component, enrichedIncidentsByMonitor);
       }
+      return this.enrichMonitorComponent(component, enrichedIncidentsByMonitor);
     });
   }
 
   findActiveIncident<T extends BaseIncident>(
     incidents: T[],
   ): T | typeof OPERATIONAL_STATUS {
-    const prioritizedIncidents = this.getPrioritizedIncidents(incidents);
+    const prioritizedIncidents = this.prioritizeIncidents(incidents, false);
     const activeIncident = prioritizedIncidents.find(
-      (inc) => inc.status === IncidentStatus.OPEN,
+      (incident) => incident.status === IncidentStatus.OPEN,
     );
 
     return activeIncident ?? OPERATIONAL_STATUS;
   }
 
-  private getPrioritizedIncidents<T extends BaseIncident>(incidents: T[]): T[] {
-    return [...incidents].sort(
+  private flattenMonitors(components: StatusComponent[]): MonitorForStatus[] {
+    return components.flatMap((component) =>
+      isGroup(component) ? component.monitors : [component],
+    );
+  }
+
+  private enrichGroupComponent(
+    component: StatusComponent & { monitors: MonitorForStatus[] },
+    enrichedIncidentsByMonitor: Map<string, EnrichedIncident[]>,
+  ): EnrichedStatusComponent {
+    return {
+      ...component,
+      monitors: component.monitors.map((monitor) => ({
+        ...monitor,
+        currentIncident: this.findActiveIncident(
+          enrichedIncidentsByMonitor.get(monitor.id) ?? [],
+        ),
+        history: this.buildHistoryForMonitors([monitor]),
+      })),
+    };
+  }
+
+  private enrichMonitorComponent(
+    component: MonitorForStatus,
+    enrichedIncidentsByMonitor: Map<string, EnrichedIncident[]>,
+  ): EnrichedStatusComponent {
+    return {
+      ...component,
+      currentIncident: this.findActiveIncident(
+        enrichedIncidentsByMonitor.get(component.id) ?? [],
+      ),
+      history: this.buildHistoryForMonitors([component]),
+    };
+  }
+
+  private prioritizeIncidents<T extends BaseIncident>(
+    incidents: T[],
+    copy = true,
+  ): T[] {
+    const arr = copy ? [...incidents] : incidents;
+    return arr.sort(
       (a, b) =>
         INCIDENT_PRIORITY_ORDER.indexOf(a.type) -
         INCIDENT_PRIORITY_ORDER.indexOf(b.type),
     );
   }
 
-  private sortIncidentsByDate(
+  private sortIncidentsByLatest(
     incidents: EnrichedIncident[],
+    copy = true,
   ): EnrichedIncident[] {
-    return [...incidents].sort(
-      (a, b) =>
-        new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
-    );
+    const arr = copy ? [...incidents] : incidents;
+
+    const OPEN_PRIORITY = 0;
+    const CLOSED_PRIORITY = 1;
+
+    return arr.sort((a, b) => {
+      const statusDiff =
+        (a.status === IncidentStatus.OPEN ? OPEN_PRIORITY : CLOSED_PRIORITY) -
+        (b.status === IncidentStatus.OPEN ? OPEN_PRIORITY : CLOSED_PRIORITY);
+
+      if (statusDiff !== 0) return statusDiff;
+
+      return (
+        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      );
+    });
   }
 
   private buildHistoryForMonitors(monitors: MonitorForStatus[]): Days[] {
-    const now = new Date();
-    const startDate = subDays(now, HISTORY_OFFSET);
-
-    const incidentsByDay = this.indexIncidentsByDay(monitors, startDate);
+    const now = this.dateProvider.now();
 
     return Array.from({ length: HISTORY_DAYS }, (_, dayIndex) => {
       const day = subDays(now, HISTORY_OFFSET - dayIndex);
+      const dayStart = startOfDay(day);
       const dayEnd = endOfDay(day);
 
-      const hasActiveMonitor = monitors.some((monitor) => {
-        const componentCreated = parseISO(monitor.created_at);
-        return !isBefore(dayEnd, componentCreated);
-      });
+      const hasActiveMonitor = this.hasActiveMonitorOnDay(monitors, dayEnd);
 
       if (!hasActiveMonitor) {
         return { color: "bg-empty", index: dayIndex };
       }
-      const dayIncidents = incidentsByDay.get(dayIndex) ?? [];
+
+      const dayIncidents = this.filterIncidentsByDateRange(
+        monitors,
+        dayStart,
+        dayEnd,
+      );
 
       if (dayIncidents.length === 0) {
         return {
@@ -123,82 +183,177 @@ export class StatusProcessor {
         };
       }
 
-      const prioritizedIncidents = this.getPrioritizedIncidents(dayIncidents);
+      const prioritizedIncidents = this.prioritizeIncidents(
+        dayIncidents,
+        false,
+      );
 
       return {
         index: dayIndex,
         color: prioritizedIncidents[0].color,
-        incidents: this.sortIncidentsByDate(prioritizedIncidents),
+        incidents: this.sortIncidentsByLatest(prioritizedIncidents, false),
       };
     });
   }
 
-  private indexIncidentsByDay(
+  private hasActiveMonitorOnDay(
     monitors: MonitorForStatus[],
-    startDate: Date,
-  ): Map<number, EnrichedIncident[]> {
-    const incidentsByDay = new Map<number, EnrichedIncident[]>();
-    const startTime = startOfDay(startDate).getTime();
-
-    for (const monitor of monitors) {
-      for (const incident of monitor.incidents) {
-        const incidentDate = parseISO(incident.created_at);
-        const dayIndex = Math.floor(
-          (incidentDate.getTime() - startTime) / MS_PER_DAY,
-        );
-
-        if (dayIndex < 0 || dayIndex >= HISTORY_DAYS) {
-          continue;
-        }
-
-        const enrichedIncident = this.buildIncident(monitor, incident);
-
-        if (!incidentsByDay.has(dayIndex)) {
-          incidentsByDay.set(dayIndex, []);
-        }
-        incidentsByDay.get(dayIndex)!.push(enrichedIncident);
-      }
-    }
-
-    return incidentsByDay;
+    dayEnd: Date,
+  ): boolean {
+    return monitors.some((monitor) => {
+      const componentCreated = this.parseDateSafe(monitor.created_at);
+      return componentCreated && !isBefore(dayEnd, componentCreated);
+    });
   }
 
-  private buildIncident(
-    monitor: MonitorForStatus,
-    incident: IncidentForStatus,
-  ): EnrichedIncident {
-    const config = INCIDENT_CONFIG[incident.type];
-    const startedDateTime = new Date(incident.created_at);
-    const startedDate = startedDateTime.toLocaleDateString("en-US", {
-      month: "long",
-      day: "numeric",
-    });
-    const startedTime = startedDateTime.toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+  private filterIncidentsByDateRange(
+    monitors: MonitorForStatus[],
+    dayStart: Date,
+    dayEnd: Date,
+  ): EnrichedIncident[] {
+    return monitors.flatMap((monitor) =>
+      monitor.incidents
+        .filter((i) => this.isIncidentInDateRange(i, dayStart, dayEnd))
+        .map((i) =>
+          this.enrichIncident(monitor, i, { start: dayStart, end: dayEnd }),
+        )
+        .filter((e): e is EnrichedIncident => e !== null),
+    );
+  }
 
-    const endedDateTime = incident.ended_at
-      ? new Date(incident.ended_at)
+  private isIncidentInDateRange(
+    incident: IncidentForStatus,
+    dayStart: Date,
+    dayEnd: Date,
+  ): boolean {
+    const incidentStartDate = this.parseDateSafe(incident.created_at);
+    if (!incidentStartDate) return false;
+
+    const incidentEndDate = incident.ended_at
+      ? this.parseDateSafe(incident.ended_at)
       : null;
 
-    const endedTime =
-      endedDateTime?.toLocaleTimeString("en-US", {
-        hour: "2-digit",
-        minute: "2-digit",
-      }) ?? null;
+    const startedBeforeOrDuringDay = incidentStartDate <= dayEnd;
+    const endedAfterDay = !incidentEndDate || incidentEndDate >= dayStart;
 
-    if (!config) {
-      throw new Error(`Unknown incident type: ${incident.type}`);
+    return startedBeforeOrDuringDay && endedAfterDay;
+  }
+
+  private enrichIncident(
+    monitor: MonitorForStatus,
+    incident: IncidentForStatus,
+    dateRange?: { start: Date; end: Date },
+  ): EnrichedIncident | null {
+    const incidentStartDate = this.parseDateSafe(incident.created_at);
+    if (!incidentStartDate) {
+      return null;
     }
+
+    const incidentEndDate = incident.ended_at
+      ? this.parseDateSafe(incident.ended_at)
+      : null;
+
+    let actualStart = incidentStartDate;
+    let actualEnd = incidentEndDate;
+
+    if (dateRange) {
+      actualStart =
+        incidentStartDate > dateRange.start
+          ? incidentStartDate
+          : dateRange.start;
+      actualEnd =
+        incidentEndDate && incidentEndDate < dateRange.end
+          ? incidentEndDate
+          : dateRange.end;
+    }
+
+    const config = this.getIncidentConfig(incident.type);
+    if (!config) {
+      return null;
+    }
+
+    const message = this.buildIncidentMessage(monitor, incidentStartDate);
+
+    let isEndedForTooltip = incident.ended_at !== null;
+
+    if (!isEndedForTooltip && dateRange) {
+      const now = this.dateProvider.now();
+      const isToday =
+        startOfDay(now).getTime() === startOfDay(dateRange.start).getTime();
+      isEndedForTooltip = !isToday;
+    }
+
+    const tooltip = this.buildTooltip(
+      incident.message,
+      actualStart,
+      actualEnd,
+      isEndedForTooltip,
+    );
 
     return {
       ...incident,
       ...config,
-      message: `${monitor.name} is currently affected. Issue started on ${startedDate} at ${startedTime}`,
-      tooltip: incident.ended_at
-        ? `${incident.message} (${startedTime} - ${endedTime})`
-        : `${incident.message}`,
+      message,
+      tooltip,
     };
+  }
+
+  private buildEnrichedIncident(
+    monitor: MonitorForStatus,
+    incident: IncidentForStatus,
+  ): EnrichedIncident | null {
+    return this.enrichIncident(monitor, incident);
+  }
+
+  private buildIncidentMessage(
+    monitor: MonitorForStatus,
+    startedDateTime: Date,
+  ): string {
+    const formattedDate = startedDateTime.toLocaleDateString(
+      LOCALE,
+      DATE_FORMAT_OPTIONS.date,
+    );
+    const formattedTime = startedDateTime.toLocaleTimeString(
+      LOCALE,
+      DATE_FORMAT_OPTIONS.time,
+    );
+
+    return `${monitor.name} is currently affected. Issue started on ${formattedDate} at ${formattedTime}`;
+  }
+
+  private buildTooltip(
+    incidentMessage: string,
+    startTime: Date,
+    endTime: Date | null,
+    isEnded: boolean,
+  ): string {
+    const startFormatted = startTime.toLocaleTimeString(
+      LOCALE,
+      DATE_FORMAT_OPTIONS.time,
+    );
+
+    if (!isEnded) {
+      return `${incidentMessage} (started at ${startFormatted})`;
+    }
+
+    const endFormatted = endTime
+      ? endTime.toLocaleTimeString(LOCALE, DATE_FORMAT_OPTIONS.time)
+      : startFormatted;
+
+    return `${incidentMessage} (${startFormatted} - ${endFormatted})`;
+  }
+
+  private getIncidentConfig(type: string) {
+    if (!(type in INCIDENT_CONFIG)) return null;
+    return INCIDENT_CONFIG[type as IncidentType];
+  }
+
+  private parseDateSafe(dateString: string): Date | null {
+    try {
+      const date = parseISO(dateString);
+      return isNaN(date.getTime()) ? null : date;
+    } catch {
+      return null;
+    }
   }
 }
