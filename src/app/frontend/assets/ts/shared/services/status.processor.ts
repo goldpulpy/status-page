@@ -138,10 +138,14 @@ export class StatusProcessor {
     immutable = true,
   ): EnrichedIncident[] {
     const arr = immutable ? [...incidents] : incidents;
+
+    const OPEN_PRIORITY = 0;
+    const CLOSED_PRIORITY = 1;
+
     return arr.sort((a, b) => {
       const statusDiff =
-        (a.status === IncidentStatus.OPEN ? 0 : 1) -
-        (b.status === IncidentStatus.OPEN ? 0 : 1);
+        (a.status === IncidentStatus.OPEN ? OPEN_PRIORITY : CLOSED_PRIORITY) -
+        (b.status === IncidentStatus.OPEN ? OPEN_PRIORITY : CLOSED_PRIORITY);
 
       if (statusDiff !== 0) return statusDiff;
 
@@ -207,21 +211,14 @@ export class StatusProcessor {
     dayStart: Date,
     dayEnd: Date,
   ): EnrichedIncident[] {
-    const result: EnrichedIncident[] = [];
-
-    for (const monitor of monitors) {
-      for (const incident of monitor.incidents) {
-        if (!this.isIncidentInDateRange(incident, dayStart, dayEnd)) continue;
-
-        const enriched = this.enrichIncident(monitor, incident, {
-          start: dayStart,
-          end: dayEnd,
-        });
-        if (enriched) result.push(enriched);
-      }
-    }
-
-    return result;
+    return monitors.flatMap((monitor) =>
+      monitor.incidents
+        .filter((i) => this.isIncidentInDateRange(i, dayStart, dayEnd))
+        .map((i) =>
+          this.enrichIncident(monitor, i, { start: dayStart, end: dayEnd }),
+        )
+        .filter((e): e is EnrichedIncident => e !== null),
+    );
   }
 
   private isIncidentInDateRange(
