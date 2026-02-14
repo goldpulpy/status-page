@@ -19,7 +19,6 @@ import { BaseIncident, IncidentStatus } from "@/shared/types/incident";
 
 const HISTORY_DAYS = 30;
 const HISTORY_OFFSET = HISTORY_DAYS - 1;
-const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
 export class StatusProcessor {
   buildEnrichedIncidents(
@@ -97,12 +96,10 @@ export class StatusProcessor {
 
   private buildHistoryForMonitors(monitors: MonitorForStatus[]): Days[] {
     const now = new Date();
-    const startDate = subDays(now, HISTORY_OFFSET);
-
-    const incidentsByDay = this.indexIncidentsByDay(monitors, startDate);
 
     return Array.from({ length: HISTORY_DAYS }, (_, dayIndex) => {
       const day = subDays(now, HISTORY_OFFSET - dayIndex);
+      const dayStart = startOfDay(day);
       const dayEnd = endOfDay(day);
 
       const hasActiveMonitor = monitors.some((monitor) => {
@@ -113,7 +110,25 @@ export class StatusProcessor {
       if (!hasActiveMonitor) {
         return { color: "bg-empty", index: dayIndex };
       }
-      const dayIncidents = incidentsByDay.get(dayIndex) ?? [];
+
+      const dayIncidents: EnrichedIncident[] = [];
+      for (const monitor of monitors) {
+        for (const incident of monitor.incidents) {
+          const incidentStartDate = parseISO(incident.created_at);
+          const incidentEndDate = incident.ended_at
+            ? parseISO(incident.ended_at)
+            : null;
+
+          const startedBeforeOrDuringDay = !isBefore(dayEnd, incidentStartDate);
+          const endedAfterDay =
+            !incidentEndDate || !isBefore(incidentEndDate, dayStart);
+
+          if (startedBeforeOrDuringDay && endedAfterDay) {
+            const enrichedIncident = this.buildIncident(monitor, incident);
+            dayIncidents.push(enrichedIncident);
+          }
+        }
+      }
 
       if (dayIncidents.length === 0) {
         return {
@@ -131,36 +146,6 @@ export class StatusProcessor {
         incidents: this.sortIncidentsByDate(prioritizedIncidents),
       };
     });
-  }
-
-  private indexIncidentsByDay(
-    monitors: MonitorForStatus[],
-    startDate: Date,
-  ): Map<number, EnrichedIncident[]> {
-    const incidentsByDay = new Map<number, EnrichedIncident[]>();
-    const startTime = startOfDay(startDate).getTime();
-
-    for (const monitor of monitors) {
-      for (const incident of monitor.incidents) {
-        const incidentDate = parseISO(incident.created_at);
-        const dayIndex = Math.floor(
-          (incidentDate.getTime() - startTime) / MS_PER_DAY,
-        );
-
-        if (dayIndex < 0 || dayIndex >= HISTORY_DAYS) {
-          continue;
-        }
-
-        const enrichedIncident = this.buildIncident(monitor, incident);
-
-        if (!incidentsByDay.has(dayIndex)) {
-          incidentsByDay.set(dayIndex, []);
-        }
-        incidentsByDay.get(dayIndex)!.push(enrichedIncident);
-      }
-    }
-
-    return incidentsByDay;
   }
 
   private buildIncident(
