@@ -123,9 +123,9 @@ export class StatusProcessor {
 
   private prioritizeIncidents<T extends BaseIncident>(
     incidents: T[],
-    immutable = true,
+    copy = true,
   ): T[] {
-    const arr = immutable ? [...incidents] : incidents;
+    const arr = copy ? [...incidents] : incidents;
     return arr.sort(
       (a, b) =>
         INCIDENT_PRIORITY_ORDER.indexOf(a.type) -
@@ -135,9 +135,9 @@ export class StatusProcessor {
 
   private sortIncidentsByLatest(
     incidents: EnrichedIncident[],
-    immutable = true,
+    copy = true,
   ): EnrichedIncident[] {
-    const arr = immutable ? [...incidents] : incidents;
+    const arr = copy ? [...incidents] : incidents;
 
     const OPEN_PRIORITY = 0;
     const CLOSED_PRIORITY = 1;
