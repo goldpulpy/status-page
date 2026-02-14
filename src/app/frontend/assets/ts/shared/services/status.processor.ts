@@ -26,7 +26,25 @@ const DATE_FORMAT_OPTIONS = {
   time: { hour: "2-digit", minute: "2-digit" } as const,
 } as const;
 
+type IncidentType = keyof typeof INCIDENT_CONFIG;
+
+interface DateProvider {
+  now(): Date;
+}
+
+class DefaultDateProvider implements DateProvider {
+  now(): Date {
+    return new Date();
+  }
+}
+
 export class StatusProcessor {
+  private dateProvider: DateProvider;
+
+  constructor(dateProvider: DateProvider = new DefaultDateProvider()) {
+    this.dateProvider = dateProvider;
+  }
+
   buildEnrichedIncidents(
     components: StatusComponent[],
   ): Map<string, EnrichedIncident[]> {
@@ -35,9 +53,10 @@ export class StatusProcessor {
     const monitors = this.flattenMonitors(components);
 
     for (const monitor of monitors) {
-      const enrichedIncidents = monitor.incidents.map((incident) =>
-        this.buildEnrichedIncident(monitor, incident),
-      );
+      const enrichedIncidents = monitor.incidents
+        .map((incident) => this.buildEnrichedIncident(monitor, incident))
+        .filter((incident): incident is EnrichedIncident => incident !== null);
+
       enrichedIncidentsByMonitor.set(monitor.id, enrichedIncidents);
     }
 
@@ -59,7 +78,7 @@ export class StatusProcessor {
   findActiveIncident<T extends BaseIncident>(
     incidents: T[],
   ): T | typeof OPERATIONAL_STATUS {
-    const prioritizedIncidents = this.prioritizeIncidents(incidents);
+    const prioritizedIncidents = this.prioritizeIncidents(incidents, false);
     const activeIncident = prioritizedIncidents.find(
       (incident) => incident.status === IncidentStatus.OPEN,
     );
@@ -102,25 +121,38 @@ export class StatusProcessor {
     };
   }
 
-  private prioritizeIncidents<T extends BaseIncident>(incidents: T[]): T[] {
-    return [...incidents].sort(
+  private prioritizeIncidents<T extends BaseIncident>(
+    incidents: T[],
+    immutable = true,
+  ): T[] {
+    const arr = immutable ? [...incidents] : incidents;
+    return arr.sort(
       (a, b) =>
         INCIDENT_PRIORITY_ORDER.indexOf(a.type) -
         INCIDENT_PRIORITY_ORDER.indexOf(b.type),
     );
   }
 
-  private sortIncidentsByDate(
+  private sortIncidentsByLatest(
     incidents: EnrichedIncident[],
+    immutable = true,
   ): EnrichedIncident[] {
-    return [...incidents].sort(
-      (a, b) =>
-        new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
-    );
+    const arr = immutable ? [...incidents] : incidents;
+    return arr.sort((a, b) => {
+      const statusDiff =
+        (a.status === IncidentStatus.OPEN ? 0 : 1) -
+        (b.status === IncidentStatus.OPEN ? 0 : 1);
+
+      if (statusDiff !== 0) return statusDiff;
+
+      return (
+        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      );
+    });
   }
 
   private buildHistoryForMonitors(monitors: MonitorForStatus[]): Days[] {
-    const now = new Date();
+    const now = this.dateProvider.now();
 
     return Array.from({ length: HISTORY_DAYS }, (_, dayIndex) => {
       const day = subDays(now, HISTORY_OFFSET - dayIndex);
@@ -147,12 +179,15 @@ export class StatusProcessor {
         };
       }
 
-      const prioritizedIncidents = this.prioritizeIncidents(dayIncidents);
+      const prioritizedIncidents = this.prioritizeIncidents(
+        dayIncidents,
+        false,
+      );
 
       return {
         index: dayIndex,
         color: prioritizedIncidents[0].color,
-        incidents: this.sortIncidentsByDate(prioritizedIncidents),
+        incidents: this.sortIncidentsByLatest(prioritizedIncidents, false),
       };
     });
   }
@@ -172,15 +207,21 @@ export class StatusProcessor {
     dayStart: Date,
     dayEnd: Date,
   ): EnrichedIncident[] {
-    return monitors.flatMap((monitor) =>
-      monitor.incidents
-        .filter((incident) =>
-          this.isIncidentInDateRange(incident, dayStart, dayEnd),
-        )
-        .map((incident) =>
-          this.buildDaySpecificIncident(monitor, incident, dayStart, dayEnd),
-        ),
-    );
+    const result: EnrichedIncident[] = [];
+
+    for (const monitor of monitors) {
+      for (const incident of monitor.incidents) {
+        if (!this.isIncidentInDateRange(incident, dayStart, dayEnd)) continue;
+
+        const enriched = this.enrichIncident(monitor, incident, {
+          start: dayStart,
+          end: dayEnd,
+        });
+        if (enriched) result.push(enriched);
+      }
+    }
+
+    return result;
   }
 
   private isIncidentInDateRange(
@@ -201,25 +242,40 @@ export class StatusProcessor {
     return startedBeforeOrDuringDay && endedAfterDay;
   }
 
-  private buildDaySpecificIncident(
+  private enrichIncident(
     monitor: MonitorForStatus,
     incident: IncidentForStatus,
-    dayStart: Date,
-    dayEnd: Date,
-  ): EnrichedIncident {
-    const incidentStartDate = this.parseDateSafe(incident.created_at)!;
+    dateRange?: { start: Date; end: Date },
+  ): EnrichedIncident | null {
+    const incidentStartDate = this.parseDateSafe(incident.created_at);
+    if (!incidentStartDate) {
+      return null;
+    }
+
     const incidentEndDate = incident.ended_at
       ? this.parseDateSafe(incident.ended_at)
       : null;
 
-    const actualStart =
-      incidentStartDate > dayStart ? incidentStartDate : dayStart;
-    const actualEnd =
-      incidentEndDate && incidentEndDate < dayEnd ? incidentEndDate : dayEnd;
+    let actualStart = incidentStartDate;
+    let actualEnd = incidentEndDate;
+
+    if (dateRange) {
+      actualStart =
+        incidentStartDate > dateRange.start
+          ? incidentStartDate
+          : dateRange.start;
+      actualEnd =
+        incidentEndDate && incidentEndDate < dateRange.end
+          ? incidentEndDate
+          : dateRange.end;
+    }
 
     const config = this.getIncidentConfig(incident.type);
-    const message = this.buildIncidentMessage(monitor, incidentStartDate);
+    if (!config) {
+      return null;
+    }
 
+    const message = this.buildIncidentMessage(monitor, incidentStartDate);
     const tooltip = this.buildTooltip(
       incident.message,
       actualStart,
@@ -238,32 +294,8 @@ export class StatusProcessor {
   private buildEnrichedIncident(
     monitor: MonitorForStatus,
     incident: IncidentForStatus,
-  ): EnrichedIncident {
-    const startedDateTime = this.parseDateSafe(incident.created_at);
-    if (!startedDateTime) {
-      throw new Error(`Invalid created_at date for incident: ${incident.id}`);
-    }
-
-    const config = this.getIncidentConfig(incident.type);
-    const message = this.buildIncidentMessage(monitor, startedDateTime);
-
-    const endedDateTime = incident.ended_at
-      ? this.parseDateSafe(incident.ended_at)
-      : null;
-
-    const tooltip = this.buildTooltip(
-      incident.message,
-      startedDateTime,
-      endedDateTime,
-      incident.ended_at !== null,
-    );
-
-    return {
-      ...incident,
-      ...config,
-      message,
-      tooltip,
-    };
+  ): EnrichedIncident | null {
+    return this.enrichIncident(monitor, incident);
   }
 
   private buildIncidentMessage(
@@ -279,9 +311,7 @@ export class StatusProcessor {
       DATE_FORMAT_OPTIONS.time,
     );
 
-    const message = `${monitor.name} is currently affected. Issue started on ${formattedDate} at ${formattedTime}`;
-
-    return message;
+    return `${monitor.name} is currently affected. Issue started on ${formattedDate} at ${formattedTime}`;
   }
 
   private buildTooltip(
@@ -307,18 +337,15 @@ export class StatusProcessor {
   }
 
   private getIncidentConfig(type: string) {
-    const config = INCIDENT_CONFIG[type as keyof typeof INCIDENT_CONFIG];
-    if (!config) {
-      throw new Error(`Unknown incident type: ${type}`);
-    }
-    return config;
+    if (!(type in INCIDENT_CONFIG)) return null;
+    return INCIDENT_CONFIG[type as IncidentType];
   }
 
   private parseDateSafe(dateString: string): Date | null {
     try {
       const date = parseISO(dateString);
       return isNaN(date.getTime()) ? null : date;
-    } catch {
+    } catch (error) {
       return null;
     }
   }
