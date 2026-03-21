@@ -42,7 +42,7 @@ unsafe-fixes = true
 
 [tool.ruff.lint]
 select = ["ALL"]
-ignore = ["INP001", "ARG001"]
+ignore = ["INP001", "ARG001", "PLR0911"]
 
 [tool.pyright]
 include = ["src"]

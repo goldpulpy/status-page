@@ -44,7 +44,7 @@ def _validate_method(method: str) -> None:
         )
 
 
-def validate_codes(values: dict) -> None:
+def _validate_codes(values: dict) -> None:
     """Validate HTTP codes."""
     expected_response_code = values.get("expected_response_code")
     if expected_response_code is not None and not (
@@ -106,4 +106,4 @@ def validate_http_monitor(values: dict) -> None:
 
     _validate_endpoint(endpoint)
     _validate_method(method)
-    validate_codes(values)
+    _validate_codes(values)

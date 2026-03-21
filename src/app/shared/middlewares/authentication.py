@@ -32,12 +32,13 @@ class BaseAuthMiddleware(BaseHTTPMiddleware):
         """Initialize authentication middleware."""
         super().__init__(app)
 
-    def _verify_token(  # noqa: PLR0911
+    def _verify_token(
         self,
         request: Request,
     ) -> bool:
         """Verify and extract token data."""
         token = request.cookies.get(config.cookie.key)
+
         if not token:
             logger.debug("Missing token for %s", request.url.path)
             return False
