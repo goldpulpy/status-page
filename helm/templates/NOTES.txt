@@ -52,7 +52,6 @@ Create a Kubernetes secret:
   kubectl create secret generic status-page-secrets \
     --from-literal=ADMIN_USERNAME=admin \
     --from-literal=ADMIN_PASSWORD=$(openssl rand -base64 16) \
-    --from-literal=JWT_SECRET=$(openssl rand -base64 32) \
     -n {{ .Release.Namespace }}
 
 Then upgrade with:
@@ -77,7 +76,7 @@ Then upgrade with:
 
 Admin Credentials:
 {{- if .Values.secrets.existingSecret }}
-  ✓ Securely stored in: {{ .Values.secrets.existingSecret }}
+  Securely stored in: {{ .Values.secrets.existingSecret }}
 
   Retrieve username:
     kubectl get secret {{ .Values.secrets.existingSecret }} \
