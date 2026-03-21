@@ -48,18 +48,18 @@ def _validate_codes(values: dict) -> None:
     """Validate HTTP codes."""
     expected_response_code = values.get("expected_response_code")
     if expected_response_code is not None and not (
-        HTTP_ERROR_MIN <= expected_response_code <= HTTP_ERROR_MAX
+        HTTP_ERROR_MIN <= int(expected_response_code) <= HTTP_ERROR_MAX
     ):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="expected_response_code must be between 100 and 599",
+            detail="Expected response code must be between 100 and 599",
         )
 
     latency_threshold_ms = values.get("latency_threshold_ms")
-    if latency_threshold_ms is not None and latency_threshold_ms <= 0:
+    if latency_threshold_ms is not None and int(latency_threshold_ms) <= 0:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="latency_threshold_ms must be greater than 0",
+            detail="Latency threshold must be greater than 0",
         )
 
     error_mapping = values.get("error_mapping")
@@ -81,7 +81,7 @@ def _validate_codes(values: dict) -> None:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=(
-                    "error_mapping keys must be HTTP status codes between"
+                    "Error mapping keys must be HTTP status codes between"
                     f" 100 and 599; invalid: {invalid_codes}"
                 ),
             )

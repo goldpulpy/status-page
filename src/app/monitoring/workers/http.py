@@ -1,5 +1,6 @@
 """HTTP worker for endpoint monitoring."""
 
+import json
 import logging
 
 import httpx
@@ -97,7 +98,11 @@ class HTTPWorker(BaseWorker):
 
         kwargs = {}
         if self._config.request_body:
-            kwargs["json"] = self._config.request_body
+            try:
+                kwargs["json"] = json.loads(self._config.request_body)
+
+            except json.JSONDecodeError:
+                kwargs["data"] = self._config.request_body
 
         response = await client.request(
             method,
