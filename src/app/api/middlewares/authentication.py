@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import logging
 from typing import TYPE_CHECKING, ClassVar
-from fastapi import status
 
+from fastapi import status
 from fastapi.responses import JSONResponse
 
 from app.shared import config

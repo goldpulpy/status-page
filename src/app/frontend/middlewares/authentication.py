@@ -5,8 +5,8 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING, ClassVar
 
-from fastapi.responses import RedirectResponse
 from fastapi import status
+from fastapi.responses import RedirectResponse
 
 from app.shared import config
 from app.shared.middlewares import BaseAuthMiddleware
