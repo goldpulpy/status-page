@@ -10,14 +10,20 @@ import uvicorn
 from fastapi import FastAPI, status
 from fastapi.staticfiles import StaticFiles
 from slowapi.errors import RateLimitExceeded
+from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 
 from app import api, frontend, shared
 from app.api import docs
 from app.container import Container
+from app.monitoring.scheduler import WorkerSchedulerError
 from app.shared import config
 from app.shared.exc_handlers import (
+    general_exception_handler,
+    integrity_error_handler,
     not_found_handler,
     rate_limit_exception_handler,
+    sqlalchemy_error_handler,
+    worker_scheduler_error_handler,
 )
 from app.shared.log_filters import HealthCheckFilter
 
@@ -66,6 +72,10 @@ app.mount(
 
 app.add_exception_handler(status.HTTP_404_NOT_FOUND, not_found_handler)
 app.add_exception_handler(RateLimitExceeded, rate_limit_exception_handler)
+app.add_exception_handler(IntegrityError, integrity_error_handler)
+app.add_exception_handler(SQLAlchemyError, sqlalchemy_error_handler)
+app.add_exception_handler(WorkerSchedulerError, worker_scheduler_error_handler)
+app.add_exception_handler(Exception, general_exception_handler)
 
 api.middlewares.setup_middlewares(app)
 frontend.middlewares.setup_middlewares(app)

@@ -39,6 +39,16 @@ class MonitorRepository:
         result = await self._session.execute(stmt)
         return result.scalar_one_or_none()
 
+    async def find_by_name(self, name: str) -> MonitorModel | None:
+        """Find a monitor by name."""
+        stmt = select(MonitorModel).where(
+            MonitorModel.name == name,
+            MonitorModel.is_deleted == False,  # noqa: E712
+        )
+
+        result = await self._session.execute(stmt)
+        return result.scalar_one_or_none()
+
     async def find_by_group_id(self, group_id: UUID) -> list[MonitorModel]:
         """Find monitors by group ID."""
         result = await self._session.execute(
