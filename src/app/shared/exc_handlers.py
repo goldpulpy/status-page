@@ -54,7 +54,7 @@ async def rate_limit_exception_handler(
     """Rate limit handler."""
     if isinstance(exc, RateLimitExceeded):
         return JSONResponse(
-            status_code=429,
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
             content={
                 "error": "Too many requests",
                 "detail": f"Rate limit exceeded: {exc.detail}",
@@ -62,7 +62,7 @@ async def rate_limit_exception_handler(
         )
 
     return JSONResponse(
-        status_code=500,
+        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
         content={"error": "Internal server error"},
     )
 

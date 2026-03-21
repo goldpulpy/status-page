@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import logging
 from typing import TYPE_CHECKING, ClassVar
+from fastapi import status
 
 from fastapi.responses import JSONResponse
 
@@ -45,7 +46,7 @@ class APIAuthMiddleware(BaseAuthMiddleware):
         if not self._verify_token(request):
             return JSONResponse(
                 content={"detail": "Unauthorized"},
-                status_code=401,
+                status_code=status.HTTP_401_UNAUTHORIZED,
             )
 
         return await call_next(request)
