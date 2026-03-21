@@ -15,6 +15,7 @@ from jwt.exceptions import (
 )
 from starlette.middleware.base import BaseHTTPMiddleware
 
+from app.shared import config
 from app.shared.jwt_utils import verify_auth_token
 
 if TYPE_CHECKING:
@@ -36,7 +37,7 @@ class BaseAuthMiddleware(BaseHTTPMiddleware):
         request: Request,
     ) -> bool:
         """Verify and extract token data."""
-        token = request.cookies.get("token")
+        token = request.cookies.get(config.cookie.key)
         if not token:
             logger.debug("Missing token for %s", request.url.path)
             return False
