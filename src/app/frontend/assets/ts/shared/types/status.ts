@@ -9,6 +9,7 @@ export interface Tooltip {
   isActive: boolean;
   incidents?: EnrichedIncident[];
   style: string;
+  date?: string;
 }
 
 export interface IncidentConfig {
@@ -26,6 +27,7 @@ export interface EnrichedIncident extends IncidentForStatus, IncidentConfig {
 export interface Days {
   color: string;
   index: number;
+  date: string;
   incidents?: EnrichedIncident[];
 }
 

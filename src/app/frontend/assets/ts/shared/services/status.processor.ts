@@ -163,10 +163,16 @@ export class StatusProcessor {
       const dayStart = startOfDay(day);
       const dayEnd = endOfDay(day);
 
+      const formattedDate = day.toLocaleDateString(LOCALE, {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      });
+
       const hasActiveMonitor = this.hasActiveMonitorOnDay(monitors, dayEnd);
 
       if (!hasActiveMonitor) {
-        return { color: "bg-empty", index: dayIndex };
+        return { color: "bg-empty", index: dayIndex, date: formattedDate };
       }
 
       const dayIncidents = this.filterIncidentsByDateRange(
@@ -179,6 +185,7 @@ export class StatusProcessor {
         return {
           color: "bg-operational",
           index: dayIndex,
+          date: formattedDate,
           incidents: [],
         };
       }
@@ -191,6 +198,7 @@ export class StatusProcessor {
       return {
         index: dayIndex,
         color: prioritizedIncidents[0].color,
+        date: formattedDate,
         incidents: this.sortIncidentsByLatest(prioritizedIncidents, false),
       };
     });
