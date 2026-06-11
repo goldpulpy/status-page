@@ -9,6 +9,13 @@
   class="hidden sm:block fixed max-h-96 overflow-y-auto bg-form border border-form-border rounded-form shadow-form p-2 z-50 max-w-xs"
 >
   <div>
+    <div class="mb-2 pb-2 border-b border-form-border">
+      <p
+        class="text-sm font-semibold text-title text-center"
+        x-text="tooltip.date"
+      ></p>
+    </div>
+
     {%
       set variants = [
         {

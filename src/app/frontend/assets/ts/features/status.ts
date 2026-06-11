@@ -68,6 +68,7 @@ export class StatusService {
         isActive: false,
         style: "",
         incidents: undefined,
+        date: undefined,
       };
       return;
     }
@@ -87,6 +88,7 @@ export class StatusService {
       isActive: true,
       incidents: day?.incidents,
       style: style,
+      date: day.date,
     };
   }
   public stop(): void {
