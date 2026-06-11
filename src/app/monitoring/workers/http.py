@@ -120,7 +120,7 @@ class HTTPWorker(BaseWorker):
                 except Exception:
                     logger.warning(
                         "HTTP retry attempt %d/%d failed for monitor %s",
-                        attempt.attempt_number,  # pyright: ignore[reportAttributeAccessIssue]
+                        attempt.retry_state.attempt_number,
                         self._config.retry_max_attempts,
                         self._config.id,
                     )
@@ -128,7 +128,7 @@ class HTTPWorker(BaseWorker):
 
                 logger.info(
                     "HTTP retry attempt %d/%d succeeded for monitor %s",
-                    attempt.attempt_number,  # pyright: ignore[reportAttributeAccessIssue]
+                    attempt.retry_state.attempt_number,
                     self._config.retry_max_attempts,
                     self._config.id,
                 )
