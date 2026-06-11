@@ -58,5 +58,6 @@ repos:
             "pyjwt>=2.10.1",
             "scalar-fastapi>=1.6.0",
             "slowapi>=0.1.9",
+            "tenacity>=9.1.4",
             "uvicorn>=0.40.0",
           ]
