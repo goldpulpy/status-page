@@ -130,6 +130,14 @@ async def create_group(
 ) -> MonitorsGroupResponse:
     """Create a specific group."""
     async with uow_factory() as uow:
+        existing_group = await uow.groups.find_by_name(create_request.name)
+
+        if existing_group:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="Group with this name already exists",
+            )
+
         group = await uow.groups.save(
             MonitorGroupModel(name=create_request.name),
         )
@@ -178,6 +186,15 @@ async def update_group(
                 detail="Group not found",
             )
 
+        if group.name != update_request.name:
+            existing_group = await uow.groups.find_by_name(update_request.name)
+
+            if existing_group:
+                raise HTTPException(
+                    status_code=status.HTTP_409_CONFLICT,
+                    detail="Group with this name already exists",
+                )
+
         group.name = update_request.name
         group = await uow.groups.save(group)
 
@@ -220,6 +237,14 @@ async def delete_group(
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Group not found",
+            )
+
+        monitors_in_group = await uow.monitors.find_by_group_id(group_id)
+
+        if monitors_in_group:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Cannot delete group with assigned monitors",
             )
 
         group.is_deleted = True

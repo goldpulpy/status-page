@@ -5,6 +5,7 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING, ClassVar
 
+from fastapi import status
 from fastapi.responses import RedirectResponse
 
 from app.shared import config
@@ -50,7 +51,7 @@ class SSRAuthMiddleware(BaseAuthMiddleware):
         if not self._verify_token(request):
             return RedirectResponse(
                 url=f"/{config.admin.safe_path}/login",
-                status_code=302,
+                status_code=status.HTTP_302_FOUND,
             )
 
         return await call_next(request)

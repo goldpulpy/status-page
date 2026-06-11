@@ -64,7 +64,7 @@ class MonitorRequest(BaseModel):
     @model_validator(mode="before")
     @classmethod
     def validate(cls, values: dict) -> dict:
-        """Validate HTTP endpoint."""
+        """Validate monitor configuration."""
         monitor_type = values.get("type")
 
         if monitor_type == MonitorType.HTTP:

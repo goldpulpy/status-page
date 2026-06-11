@@ -161,6 +161,14 @@ async def create_monitor(
 ) -> MonitorResponse:
     """Create a new monitor."""
     async with uow_factory() as uow:
+        existing_monitor = await uow.monitors.find_by_name(create_request.name)
+
+        if existing_monitor:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="Monitor with this name already exists",
+            )
+
         if create_request.group_id:
             group = await uow.groups.find_by_id(create_request.group_id)
             if not group:
@@ -224,6 +232,17 @@ async def update_monitor(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Monitor not found",
             )
+
+        if monitor.name != update_request.name:
+            existing_monitor = await uow.monitors.find_by_name(
+                update_request.name,
+            )
+
+            if existing_monitor:
+                raise HTTPException(
+                    status_code=status.HTTP_409_CONFLICT,
+                    detail="Monitor with this name already exists",
+                )
 
         if (
             update_request.group_id

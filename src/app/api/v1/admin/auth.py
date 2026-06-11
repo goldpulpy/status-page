@@ -120,10 +120,10 @@ async def logout(
 ) -> LogoutResponse:
     """Admin logout."""
     response.delete_cookie(
-        key="token",
+        key=config.cookie.key,
         httponly=True,
-        samesite="none" if config.app.is_production else "lax",
-        secure=config.app.is_production,
+        samesite="lax",
+        secure=config.app.https,
     )
 
     return LogoutResponse(

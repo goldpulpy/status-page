@@ -43,4 +43,11 @@ def verify_auth_token(token: str) -> dict:
         token,
         config.jwt.secret,
         algorithms=[config.jwt.algorithm],
+        issuer=config.jwt.issuer,
+        options={
+            "verify_iss": True,
+            "verify_exp": True,
+            "verify_nbf": True,
+            "require": ["exp", "iat", "iss", "sub"],
+        },
     )
