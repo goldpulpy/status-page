@@ -12,6 +12,12 @@ from httpx import (
     TimeoutException,
     TooManyRedirects,
 )
+from tenacity import (
+    AsyncRetrying,
+    before_sleep_log,
+    stop_after_attempt,
+    wait_fixed,
+)
 
 from app.enums import IncidentType
 from app.monitoring.workers.base import BaseWorker, Incident
@@ -33,19 +39,11 @@ class HTTPWorker(BaseWorker):
             timeout=self._config.check_timeout,
         ) as client:
             try:
-                response = await self._execute_request(client)
-                response.raise_for_status()
-
-                incident = self._validate_response(response)
-
-                if incident:
-                    await self.upsert_incident(incident)
-
-                else:
-                    await self.resolve_incident()
+                response = await self._request_with_retry(client)
 
             except HTTPStatusError as e:
                 await self._handle_status_code_error(e)
+                return
 
             except PoolTimeout:
                 await self.upsert_incident(
@@ -54,6 +52,7 @@ class HTTPWorker(BaseWorker):
                         type=IncidentType.MAJOR_OUTAGE,
                     ),
                 )
+                return
 
             except ConnectError:
                 await self.upsert_incident(
@@ -62,6 +61,7 @@ class HTTPWorker(BaseWorker):
                         type=IncidentType.MAJOR_OUTAGE,
                     ),
                 )
+                return
 
             except TimeoutException:
                 await self.upsert_incident(
@@ -70,6 +70,7 @@ class HTTPWorker(BaseWorker):
                         type=IncidentType.MAJOR_OUTAGE,
                     ),
                 )
+                return
 
             except TooManyRedirects:
                 await self.upsert_incident(
@@ -78,6 +79,7 @@ class HTTPWorker(BaseWorker):
                         type=IncidentType.PARTIAL_OUTAGE,
                     ),
                 )
+                return
 
             except Exception:
                 logger.exception(
@@ -90,6 +92,50 @@ class HTTPWorker(BaseWorker):
                         type=IncidentType.MAJOR_OUTAGE,
                     ),
                 )
+                return
+
+            incident = self._validate_response(response)
+
+            if incident:
+                await self.upsert_incident(incident)
+
+            else:
+                await self.resolve_incident()
+
+    async def _request_with_retry(self, client: httpx.AsyncClient) -> Response:
+        """Execute request with retry logic using tenacity."""
+        retryer = AsyncRetrying(
+            stop=stop_after_attempt(self._config.retry_max_attempts),
+            wait=wait_fixed(self._config.retry_delay_seconds),
+            reraise=True,
+            before_sleep=before_sleep_log(logger, logging.DEBUG),
+        )
+
+        async for attempt in retryer:
+            with attempt:
+                try:
+                    response = await self._execute_request(client)
+                    response.raise_for_status()
+
+                except Exception:
+                    logger.warning(
+                        "HTTP retry attempt %d/%d failed for monitor %s",
+                        attempt.attempt_number,  # pyright: ignore[reportAttributeAccessIssue]
+                        self._config.retry_max_attempts,
+                        self._config.id,
+                    )
+                    raise
+
+                logger.info(
+                    "HTTP retry attempt %d/%d succeeded for monitor %s",
+                    attempt.attempt_number,  # pyright: ignore[reportAttributeAccessIssue]
+                    self._config.retry_max_attempts,
+                    self._config.id,
+                )
+                return response
+
+        msg = "Unreachable"
+        raise RuntimeError(msg)  # pyright: ignore[reportReturnType]
 
     async def _execute_request(self, client: httpx.AsyncClient) -> Response:
         """Execute HTTP request based on configuration."""
