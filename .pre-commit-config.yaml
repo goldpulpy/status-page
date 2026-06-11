@@ -49,7 +49,7 @@ repos:
             "alembic>=1.17.2",
             "asyncpg>=0.31.0",
             "dependency-injector>=4.48.3",
-            "fastapi>=0.128.0",
+            "fastapi==0.128.0",
             "htmlmin>=0.1.12",
             "httpx>=0.28.1",
             "jinja2>=3.1.6",
