@@ -24,6 +24,8 @@ class WorkerConfig(BaseModel):
     interval: int = Field(default=60, gt=0)
     initial_delay: int = Field(default=0, ge=0)
     check_timeout: int = Field(default=30, gt=0)
+    retry_max_attempts: int = Field(default=3, ge=1)
+    retry_delay_seconds: int = Field(default=5, ge=1)
 
     endpoint: str
     latency_threshold_ms: int
